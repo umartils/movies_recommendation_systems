@@ -1,4 +1,4 @@
-# Laporan Proyek Machine Learning - Nama Anda
+# Laporan Proyek Machine Learning - Umar Tilmisani
 
 ## Project Overview
 
@@ -58,17 +58,86 @@ Penilaian terhadap performa model dilakukan untuk memastikan efektivitas hasil y
 - Sementara pada model collaborative filtering, digunakan metrik Root Mean Squared Error (RMSE) untuk mengukur tingkat kesalahan dalam prediksi rating pengguna.
 
 ## Data Understanding
-Paragraf awal bagian ini menjelaskan informasi mengenai jumlah data, kondisi data, dan informasi mengenai data yang digunakan. Sertakan juga sumber atau tautan untuk mengunduh dataset. Contoh: [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Restaurant+%26+consumer+data).
 
-Selanjutnya, uraikanlah seluruh variabel atau fitur pada data. Sebagai contoh:  
+*Dataset* yang digunakan pada proyek ini adalah data **"*MovieLens Latest Dataset*"** yang dapat diakses secara publik atau *open-source* pada situs web GroupLens. Untuk dataset sendiri dapat diakses dan diunduh melalui link [MovieLens Dataset by GroupLens](https://grouplens.org/datasets/movielens/). 
+Terdapat beberapa file pada dataset ini seperti file `links.csv`, `movies.csv`, `ratings.csv`, dan `tags.csv`. Namun dataset yang digunakan pada proyek ini hanya dataset `movies.csv` dan `ratings.csv` dengan rincian dataset sebagai berikut.
 
-Variabel-variabel pada Restaurant UCI dataset adalah sebagai berikut:
-- accepts : merupakan jenis pembayaran yang diterima pada restoran tertentu.
-- cuisine : merupakan jenis masakan yang disajikan pada restoran.
-- dst
+- `movies.csv`: Berisi data film seperti judul film, identitas film dan genre film. Dataset ini akan digunakan untuk membangun model sistem rekomendasi dengan pendekatan *content-based filtering*
+- `ratings.csv`: Berisi data rating film yang diberikan oleh pengguna seperti identitas pengguna, identitas film, dan rating film. Dataset ini akan digunakan untuk membangun model sistem rekomendasi dengan pendekatan *collaborative filtering*.
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Melakukan beberapa tahapan yang diperlukan untuk memahami data, contohnya teknik visualisasi data beserta insight atau exploratory data analysis.
+Selanjutnya, dilakukan tahap *Exploratory Data Analysis* (EDA)  untuk meningkatkan pemahaman mengenai data yang digunakan.
+
+### Exploratory Data Analysis (EDA)
+
+#### Fitur-fitur Pada Dataset
+
+##### File: `movies.csv`
+
+Dataset ini terdiri dari beberapa fitur sebagai berikut:
+
+```py
+RangeIndex: 9742 entries, 0 to 9741
+Data columns (total 3 columns):
+#    Column                     Non-Null Count  Dtype 
+---  ------                     --------------  ----- 
+0   movieId                     9742 non-null   int64 
+1   title                       9742 non-null   object 
+2   genres                      9742 non-null   object
+dtypes: int64(1), object(2)
+memory usage: 228.5+ KB
+```
+
+**Penjelasan Setiap Fitur**
+
+- `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
+- `title`: Berisi data judul dari film memiliki tipe data object (kategorikal).
+- `genres`: Berisi data genre dari film memiliki tipe data object (kategorikal).
+
+##### File: `ratings.csv`
+
+Dataset ini terdiri dari beberapa fitur sebagai berikut:
+
+```py
+RangeIndex: 100836 entries, 0 to 100835
+Data columns (total 4 columns):
+#    Column                     Non-Null Count  Dtype 
+---  ------                     --------------  ----- 
+0   userId                      100836 non-null  int64
+1   movieId                     100836 non-null  int64
+2   rating                      100836 non-null  float64
+2   timestamp                   100836 non-null  int64
+dtypes: int64(3), float64(1)
+memory usage: 3.1 MB
+```
+
+**Penjelasan Setiap Fitur**
+
+- `userId`: Berisi data identitas dari pengguna yang memberi rating film memiliki tipe data int64 (numerikal).
+- `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
+- `rating`: Berisi data rating dari film memiliki tipe data float64 (numerikal).
+- `timestamp`: Berisi data waktu pada saat pengguna memberikan rating memiliki tipe data int64 (numerikal).
+
+#### Melihat Ringkasan Data
+
+##### File: `movies.csv`
+
+| movieId | title                              | genres                                          |
+|---------|------------------------------------|------------------------------------------------ |
+| 1       | Toy Story (1995)                   | Adventure\|Animation\|Children\|Comedy\|Fantasy |
+| 2       | Jumanji (1995)                     | Adventure\|Children\|Fantasy                    |
+| 3       | Grumpier Old Men (1995)            | Comedy\|Romance                                 |
+| 4       | Waiting to Exhale (1995)           | Comedy\|Drama\|Romance                          |
+| 5       | Father of the Bride Part II (1995) | Comedy                                          |
+
+##### File: `ratings.csv`
+
+| userId | movieId | rating | timestamp  |
+|--------|---------|--------|------------|
+| 1      | 1       | 4.0    | 964982703  |
+| 1      | 3       | 4.0    | 964981247  |
+| 1      | 6       | 4.0    | 964982224  |
+| 1      | 47      | 5.0    | 964983815  |
+| 1      | 50      | 5.0    | 964982931  |
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
