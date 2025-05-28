@@ -2,13 +2,13 @@
 
 ## Project Overview
 
-Pada bagian ini, Kamu perlu menuliskan latar belakang yang relevan dengan proyek yang diangkat.
+Dalam era digital saat ini, jumlah konten hiburan seperti film dan serial televisi meningkat secara eksponensial. Platform penyedia layanan streaming seperti Netflix, Disney+, dan Amazon Prime Video menawarkan ribuan pilihan kepada pengguna. Namun, keberlimpahan pilihan ini justru dapat menimbulkan tantangan tersendiri bagi pengguna dalam memilih film yang sesuai dengan preferensi mereka. Oleh karena itu, dibutuhkan sistem yang mampu membantu pengguna untuk menemukan film yang relevan dan menarik secara otomatis dan personal. Sistem inilah yang dikenal sebagai sistem rekomendasi film (*movie recommendation system*).
 
-**Rubrik/Kriteria Tambahan (Opsional)**:
-- Jelaskan mengapa dan bagaimana masalah tersebut harus diselesaikan
-- Menyertakan hasil riset terkait atau referensi. Referensi yang diberikan harus berasal dari sumber yang kredibel dan author yang jelas.
-- Format Referensi dapat mengacu pada penulisan sitasi [IEEE](https://journals.ieeeauthorcenter.ieee.org/wp-content/uploads/sites/7/IEEE_Reference_Guide.pdf), [APA](https://www.mendeley.com/guides/apa-citation-guide/) atau secara umum seperti [di sini](https://penerbitdeepublish.com/menulis-buku-membuat-sitasi-dengan-mudah/)
-- Sumber yang bisa digunakan [Scholar](https://scholar.google.com/)
+Sistem rekomendasi merupakan cabang dari bidang *Information Retrieval* dan *Machine Learning* yang dirancang untuk memprediksi preferensi pengguna terhadap suatu item berdasarkan data historis. Dalam konteks film, sistem rekomendasi dapat menggunakan informasi seperti histori penilaian (rating), genre film, atau kesamaan perilaku antar pengguna. Dua pendekatan utama yang banyak digunakan dalam sistem rekomendasi adalah *content-based filtering* dan *collaborative filtering*. Pendekatan *content-based* memanfaatkan fitur dari film seperti genre dan deskripsi, sedangkan *collaborative filtering* menggunakan data perilaku pengguna lain yang memiliki kesamaan preferensi [1].
+
+Netflix, misalnya, mengklaim bahwa lebih dari 75% film yang ditonton pengguna berasal dari sistem rekomendasi mereka [2]. Hal ini menunjukkan betapa pentingnya sistem ini dalam meningkatkan kepuasan pengguna, waktu tayang (watch time), serta loyalitas terhadap platform. Selain itu, sistem rekomendasi juga memainkan peran besar dalam strategi bisnis karena mampu meningkatkan engagement dan mengurangi tingkat berhenti berlangganan (*churn*).
+
+Seiring perkembangan teknologi, algoritma yang digunakan dalam sistem rekomendasi pun semakin canggih, mulai dari pendekatan sederhana berbasis *k-Nearest Neighbors (k-NN)* hingga pendekatan berbasis *deep learning* seperti *neural collaborative filtering*. Oleh karena itu, membangun proyek sistem rekomendasi film menjadi salah satu tantangan sekaligus peluang yang menarik dalam bidang data science dan kecerdasan buatan.
 
 ## Business Understanding
 
@@ -87,7 +87,7 @@ dtypes: int64(1), object(2)
 memory usage: 228.5+ KB
 ```
 
-**Penjelasan Setiap Fitur**
+Dataset pada file `movies.csv` terdiri dari 3 kolom dan 9742 baris data. Dataset ini berisi informasi mengenai film seperti informasi id film, judul film dan juga genre film. Penjelasan setiap kolom dijelaskan sebagai berikut.
 
 - `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
 - `title`: Berisi data judul dari film memiliki tipe data object (kategorikal).
@@ -105,12 +105,12 @@ Data columns (total 4 columns):
 0   userId                      100836 non-null  int64
 1   movieId                     100836 non-null  int64
 2   rating                      100836 non-null  float64
-2   timestamp                   100836 non-null  int64
+3   timestamp                   100836 non-null  int64
 dtypes: int64(3), float64(1)
 memory usage: 3.1 MB
 ```
 
-**Penjelasan Setiap Fitur**
+Dataset pada file `ratings.csv` terdiri dari 4 kolom dan 100835 baris data. Dataset ini berisi informasi mengenai rating yang diberikan pada film seperti informasi id pengguna yang memberi rating, id film yang diberi rating, informasi rating yang diberikan pengguna, dan juga kolom waktu. Penjelasan setiap kolom dijelaskan sebagai berikut.
 
 - `userId`: Berisi data identitas dari pengguna yang memberi rating film memiliki tipe data int64 (numerikal).
 - `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
@@ -129,6 +129,12 @@ memory usage: 3.1 MB
 | 4       | Waiting to Exhale (1995)           | Comedy\|Drama\|Romance                          |
 | 5       | Father of the Bride Part II (1995) | Comedy                                          |
 
+Tabel ini berisi data mengenai film yang tersedia dalam sistem. Penjelasan tiap kolom:
+
+- `movieId` adalah ID unik yang digunakan untuk mengidentifikasi setiap film. Nilai ini menjadi acuan utama dan sering digunakan untuk menghubungkan data antar tabel.
+- `title` berisi judul film lengkap dengan tahun rilisnya dalam tanda kurung. Contohnya: *Toy Story (1995)*.
+- `genres` adalah daftar kategori atau genre dari film tersebut. Genre dipisahkan dengan tanda "|" (pipe). Contoh: *Adventure|Animation|Children|Comedy|Fantasy*.
+
 ##### File: `ratings.csv`
 
 | userId | movieId | rating | timestamp  |
@@ -139,12 +145,90 @@ memory usage: 3.1 MB
 | 1      | 47      | 5.0    | 964983815  |
 | 1      | 50      | 5.0    | 964982931  |
 
+Tabel ini menyimpan informasi mengenai rating (penilaian) yang diberikan oleh pengguna terhadap film. Penjelasan tiap kolom:
+
+- `userId` menunjukkan ID unik dari pengguna yang memberikan rating.
+- `movieId` merujuk pada film yang dinilai oleh pengguna, dan nilainya cocok dengan movieId di tabel film.
+- `rating` menunjukkan nilai penilaian dari pengguna terhadap film, biasanya dalam skala 0.5 hingga 5.0.
+- `timestamp` adalah waktu ketika rating diberikan, dalam format UNIX timestamp (jumlah detik sejak 1 Januari 1970).
+
+#### Memeriksa Nilai Kosong dan Data Duplikat
+
+Pada tahap ini dilakukan proses pemeriksaan nilai kosong pada data dan juga memeriksa data yang duplikat. Hal ini dilakukan agar dataset yang digunakan untuk modeling memiliki kualitas yang baik. Berikut proses dari tahap memeriksa nilai kosong dan data duplikat.
+
+##### File: `movies.csv`
+
+- Kode
+  
+    ```py
+    
+    movies = pd.read_csv("movies.csv")
+    null_val = movies.isna().sum()
+    duplicated_data = movies.duplicated().sum()
+    print("=============================================")
+    print(f"Jumlah Missing Values Pada Dataset Movies: \n{null_val}")
+    print(f"Jumlah Data Duplikat Pada Dataset Movies: {duplicated_data}")
+    print("=============================================")
+    ```
+- Output
+
+    ```py
+    =============================================
+    Jumlah Missing Values Pada Dataset Movies: 
+    movieId    0
+    title      0
+    genres     0
+    dtype: int64
+    Jumlah Data Duplikat Pada Dataset Movies: 0
+    =============================================
+    ```
+
+##### File: `ratings.csv`
+
+- Kode
+  
+    ```py
+    
+    ratings = pd.read_csv("ratings.csv")
+    null_val = ratings.isna().sum()
+    duplicated_data = ratings.duplicated().sum()
+    print("=============================================")
+    print(f"Jumlah Missing Values Pada Dataset Ratings: \n{null_val}")
+    print(f"Jumlah Data Duplikat Pada Dataset Ratings: {duplicated_data}")
+    print("=============================================")
+    ```
+- Output
+
+    ```py
+    =============================================
+    Jumlah Missing Values Pada Dataset Ratings: 
+    userId       0
+    movieId      0
+    rating       0
+    timestamp    0
+    dtype: int64
+    Jumlah Data Duplikat Pada Dataset Ratings: 0
+    =============================================
+    ```
+
+#### Analisis Distribusi Data
+
+Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fitur yang akan digunakan untuk pemodelan pada setiap dataset. 
+
+
+
+##### File: `movies.csv`
+
+##### File: `ratings.csv`
+
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan proses data preparation yang dilakukan
-- Menjelaskan alasan mengapa diperlukan tahapan data preparation tersebut.
+### Data Cleaning
+### Pemilihan Fitur
+### Text Processing
+### Data Transformation
+### Data Splitting
 
 ## Modeling
 Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.
@@ -166,3 +250,10 @@ Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, probl
 _Catatan:_
 - _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
 - Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+
+
+## Referensi
+
+\[1] F. Ricci, L. Rokach, dan B. Shapira, *Recommender Systems Handbook*. Springer, 2011.
+
+\[2] C. A. Gómez-Uribe dan N. Hunt, “The Netflix Recommender System: Algorithms, Business Value, and Innovation,” *ACM Trans. Manage. Inf. Syst.*, vol. 6, no. 4, pp. 1–19, Dec. 2015, doi: 10.1145/2843948.
