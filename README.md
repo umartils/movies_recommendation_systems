@@ -354,6 +354,13 @@ Data untuk genre Filmnoir:
 1531     2066      Out of the Past (1947)  Filmnoir
 ```
 ### Data Transformation
+
+Tahap transformasi data merupakan tahap untuk mengubah bentuk atau format data mentah menjadi data yang siap untuk digunakan pemodelan. Proses transformasi data sangat penting dilakukan agar model yang dibangun memiliki performa yang baik. Berikut beberapa tahapan yang akan dilakukan dalam proses transformasi data:
+
+#### TF-IDF Vectorizer
+#### Cosine Similarity
+#### Data Encoding
+
 ### Data Splitting
 
 ## Modeling
