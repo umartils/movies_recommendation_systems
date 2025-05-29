@@ -218,7 +218,7 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 - Distribusi data **genres** pada file `movies.csv`
   
     <p align="center">
-    <img src="https://github.com/user-attachments/assets/598f317d-6918-44ee-a5a3-0d09e61e2675" alt="genres" />
+    <img src="https://github.com/user-attachments/assets/96884440-8397-4c6f-9412-556b65da4496" alt="genres" />
     </p><div align="center">Gambar 1 - Distribusi Data Genre</div>
 
     Berdasarkan visulisasi pada `Gambar 1`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
@@ -239,7 +239,7 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
   
 - Distribusi data **rating** pada file `ratings.csv`
     <p align="center">
-    <img src="https://github.com/user-attachments/assets/810afcc2-07e9-469a-b2ff-8c2d01a59442" alt="rating" />
+    <img src="https://github.com/user-attachments/assets/cf61716f-87ef-4500-b05f-cc3eb8b7acde" alt="rating" />
     </p><div align="center">Gambar 2 - Distribusi Data Rating</div>
 
     Berdasarkan visulisasi pada `Gambar 2`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
