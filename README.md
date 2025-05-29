@@ -215,9 +215,35 @@ Pada tahap ini dilakukan proses pemeriksaan nilai kosong pada data dan juga meme
 
 Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fitur yang akan digunakan untuk pemodelan pada setiap dataset. 
 
-![genre](https://github.com/user-attachments/assets/598f317d-6918-44ee-a5a3-0d09e61e2675)
+- Distribusi data **genres** pada file `movies.csv`
+  
+    <p align="center">
+    <img src="https://github.com/user-attachments/assets/598f317d-6918-44ee-a5a3-0d09e61e2675" alt="genres" />
+    </p><div align="center">Gambar 1 - Distribusi Data Genre</div>
 
-![rating](https://github.com/user-attachments/assets/810afcc2-07e9-469a-b2ff-8c2d01a59442)
+    Berdasarkan visulisasi pada `Gambar 1`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
+
+    -  **Genre Terpopuler:**
+
+        * Genre *Comedy* mendominasi dataset dengan total **2.779 film**, diikuti oleh *Drama* (**2.226 film**) dan *Action* (**1.828 film**).
+        * Hal ini menunjukkan bahwa film bergenre komedi, drama, dan aksi adalah yang paling umum dalam dataset.
+
+  -  **Genre Kurang Umum:**
+
+        * Genre seperti *War*, *Film-Noir*, *Musical*, dan *Western* memiliki jumlah film yang sangat sedikit (di bawah 30 film).
+        * Ini bisa berarti bahwa data yang tersedia untuk genre-genre ini terlalu sedikit untuk digunakan dalam pelatihan model sistem rekomendasi secara efektif.
+
+  -  **Kehadiran Nilai Tidak Valid:**
+
+        * Terlihat masih ada kategori `"(no genres listed)"` dengan **23 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
+  
+- Distribusi data **rating** pada file `ratings.csv`
+    <p align="center">
+    <img src="https://github.com/user-attachments/assets/810afcc2-07e9-469a-b2ff-8c2d01a59442" alt="rating" />
+    </p><div align="center">Gambar 2 - Distribusi Data Rating</div>
+
+    Berdasarkan visulisasi pada `Gambar 2`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
+
 
 
 ##### File: `movies.csv`
@@ -228,8 +254,105 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
 
 ### Data Cleaning
+
+Pada tahap ini, dilakukan pembersihan data agar data yang digunakan memiliki kualitas yang baik. Pada tahap ini dilakukan tahap penghapusan nilai kosong dan data duplikat. Berikut penerapan dari tahap *data cleaning*.
+
+- Menangani Missing Values dan Duplicated Data pada Dataset Movies
+  
+    **Kode:**
+    ```py
+    clean_movies = movies.dropna().drop_duplicates()
+    clean_movies.info()
+    ```
+
+    **Output:**
+    ```py
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 9742 entries, 0 to 9741
+    Data columns (total 3 columns):
+    #   Column   Non-Null Count  Dtype 
+    ---  ------   --------------  ----- 
+    0   movieId  9742 non-null   int64 
+    1   title    9742 non-null   object
+    2   genres   9742 non-null   object
+    dtypes: int64(1), object(2)
+    memory usage: 228.5+ KB
+    ```
+- Menangani Missing Values dan Duplicated Data pada Dataset Ratings
+  
+    **Kode:**
+    ```py
+    clean_ratings = ratings.dropna().drop_duplicates()
+    clean_ratings.info()
+    ```
+    **Output:**
+    ```py
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 100836 entries, 0 to 100835
+    Data columns (total 4 columns):
+    #   Column     Non-Null Count   Dtype  
+    ---  ------     --------------   -----  
+    0   userId     100836 non-null  int64  
+    1   movieId    100836 non-null  int64  
+    2   rating     100836 non-null  float64
+    3   timestamp  100836 non-null  int64  
+    dtypes: float64(1), int64(3)
+    memory usage: 3.1 MB
+    ```
 ### Pemilihan Fitur
+
+Pada tahap ini dilakukan proses pemilihan fitur untuk membangun model sistem rekomendasi pada setiap dataset. Tahap ini dilakukan agar model yang dibangun memiliki performa baik. Karena tidak semua fitur pada data berisi informasi yang relevan dengan model sistem rekomendasi yang akan dibangun. Berikut proses pemilihan fitur pada setiap dataset.
+
+- Pemilihan fitur pada dataset `movies.csv`
+  
+    **Kode:**
+    ```py
+    clean_movies = clean_movies[clean_movies['genres'] != '(no genres listed)'] 
+    clean_movies['genres'].unique()
+    ```
+    **Output:**
+    ```py
+    array(['Adventure', 'Comedy', 'Action', 'Drama', 'Crime', 'Children',
+    'Mystery', 'Animation', 'Documentary', 'Thriller', 'Horror',
+    'Fantasy', 'Western', 'Film-Noir', 'Romance', 'Sci-Fi', 'Musical',
+    'War'], dtype=object)
+    ```
+    Penjelasan:
+
+    Pada dataset `movies.csv` dilakukan proses pemilihan fitur dengan menghapus nilai ***no_genres_listed*** pada kolom `genres`. Hal ini dilakukan untuk menghilangkan data yang tidak memiliki informasi genre yang berguna, sehingga analisis atau model yang dibangun nantinya tidak terpengaruh oleh entri yang tidak mengandung kategori genre yang valid. Dengan membersihkan data dari nilai seperti ***(no genres listed)***, kita memastikan bahwa setiap entri dalam kolom `genres` merepresentasikan minimal satu kategori genre yang dapat digunakan untuk keperluan klasifikasi, analisis statistik, atau visualisasi data.
+
+    
 ### Text Processing
+
+Pada tahap ini dilakukan proses pembersihan teks pada kolom `genres`. Hal ini dilakukan untuk menghilangkan karakter lain selain huruf. Sehingga setiap nilai pada kolom `genres` memiliki format yang seragam sehingga memudahkan model dalam membaca data. Berikut penerapan dari tahap *text processing*.
+
+**Kode**
+```py
+clean_movies['genres'] = clean_movies['genres'].replace({'Sci-Fi':'Scifi', 'Film-Noir':'Filmnoir'})
+print("Data untuk genre SciFi:")
+print(clean_movies[clean_movies['genres'] == 'Scifi'].head())
+
+print("\nData untuk genre Filmnoir:")
+print(clean_movies[clean_movies['genres'] == 'Filmnoir'].head())
+```
+**Output**
+```py
+Data untuk genre SciFi:
+      movieId                                  title genres
+668       880       Island of Dr. Moreau, The (1996)  Scifi
+1320     1779                          Sphere (1998)  Scifi
+1719     2311  2010: The Year We Make Contact (1984)  Scifi
+1902     2526                          Meteor (1979)  Scifi
+2000     2661        It Came from Outer Space (1953)  Scifi
+
+Data untuk genre Filmnoir:
+      movieId                       title    genres
+279       320               Suture (1993)  Filmnoir
+695       913  Maltese Falcon, The (1941)  Filmnoir
+711       930            Notorious (1946)  Filmnoir
+913      1212       Third Man, The (1949)  Filmnoir
+1531     2066      Out of the Past (1947)  Filmnoir
+```
 ### Data Transformation
 ### Data Splitting
 
