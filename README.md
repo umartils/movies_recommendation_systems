@@ -653,7 +653,12 @@ history = model.fit(
 )
 ```
 
-Model dilatih selama **30 epoch** dengan **batch size sebesar 8**, menggunakan *loss function* **Binary Crossentropy** dan *optimizer* **Adam** dengan *learning rate* 0.001. Sebagai metrik evaluasi, digunakan **Root Mean Squared Error (RMSE)** untuk mengukur seberapa jauh prediksi model dari nilai sebenarnya. Selama proses pelatihan, model belajar memetakan hubungan antara pengguna dan film berdasarkan histori rating yang tersedia.
+Model dilatih selama **30 epoch** dengan **batch size sebesar 8**, menggunakan *loss function* **Binary Crossentropy** dan *optimizer* **Adam** dengan *learning rate* 0.001. Sebagai metrik evaluasi, digunakan **Root Mean Squared Error (RMSE)** untuk mengukur seberapa jauh prediksi model dari nilai sebenarnya. Selama proses pelatihan, model belajar memetakan hubungan antara pengguna dan film berdasarkan histori rating yang tersedia. Berikut proses pelatihan model dengan menampilkan kurva pelatihan.
+
+<p align="center">
+<img src="https://github.com/user-attachments/assets/656c4049-43ee-4f41-a34a-502bdebf1681" alt="learning_curve" />
+</p><div align="center">Gambar 3 - Learning Curve Model</div>
+
 ## Evaluation
 
 Tahapan evaluasi bertujuan untuk mengukur kinerja model dalam memberikan rekomendasi kepada pengguna. Evaluasi dilakukan setelah model dibangun dan dilakukan pengujian untuk melihat performa dari model. Untuk mengukur kinerja dari sistem rekomendasi yang dikembangkan, digunakan dua metrik evaluasi yang berbeda, sesuai dengan pendekatan yang digunakan. Berikut metrik yang digunakan untuk melakukan evaluasi terhadap dua pendekatan yang digunakan untuk membangun sistem rekomendasi.
