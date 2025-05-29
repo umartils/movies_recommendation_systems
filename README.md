@@ -76,18 +76,19 @@ Selanjutnya, dilakukan tahap *Exploratory Data Analysis* (EDA)  untuk meningkatk
 Dataset ini terdiri dari beberapa fitur sebagai berikut:
 
 ```py
-RangeIndex: 9742 entries, 0 to 9741
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 86537 entries, 0 to 86536
 Data columns (total 3 columns):
-#    Column                     Non-Null Count  Dtype 
----  ------                     --------------  ----- 
-0   movieId                     9742 non-null   int64 
-1   title                       9742 non-null   object 
-2   genres                      9742 non-null   object
+ #   Column   Non-Null Count  Dtype 
+---  ------   --------------  ----- 
+ 0   movieId  86537 non-null  int64 
+ 1   title    86537 non-null  object
+ 2   genres   86537 non-null  object
 dtypes: int64(1), object(2)
-memory usage: 228.5+ KB
+memory usage: 2.0+ MB
 ```
 
-Dataset pada file `movies.csv` terdiri dari 3 kolom dan 9742 baris data. Dataset ini berisi informasi mengenai film seperti informasi id film, judul film dan juga genre film. Penjelasan setiap kolom dijelaskan sebagai berikut.
+Dataset pada file `movies.csv` terdiri dari 3 kolom dan **86.537** baris data. Dataset ini berisi informasi mengenai film seperti informasi id film, judul film dan juga genre film. Penjelasan setiap kolom dijelaskan sebagai berikut.
 
 - `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
 - `title`: Berisi data judul dari film memiliki tipe data object (kategorikal).
@@ -98,19 +99,20 @@ Dataset pada file `movies.csv` terdiri dari 3 kolom dan 9742 baris data. Dataset
 Dataset ini terdiri dari beberapa fitur sebagai berikut:
 
 ```py
-RangeIndex: 100836 entries, 0 to 100835
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 33832162 entries, 0 to 33832161
 Data columns (total 4 columns):
-#    Column                     Non-Null Count  Dtype 
----  ------                     --------------  ----- 
-0   userId                      100836 non-null  int64
-1   movieId                     100836 non-null  int64
-2   rating                      100836 non-null  float64
-3   timestamp                   100836 non-null  int64
-dtypes: int64(3), float64(1)
-memory usage: 3.1 MB
+ #   Column     Dtype  
+---  ------     -----  
+ 0   userId     int64  
+ 1   movieId    int64  
+ 2   rating     float64
+ 3   timestamp  int64  
+dtypes: float64(1), int64(3)
+memory usage: 1.0 GB
 ```
 
-Dataset pada file `ratings.csv` terdiri dari 4 kolom dan 100835 baris data. Dataset ini berisi informasi mengenai rating yang diberikan pada film seperti informasi id pengguna yang memberi rating, id film yang diberi rating, informasi rating yang diberikan pengguna, dan juga kolom waktu. Penjelasan setiap kolom dijelaskan sebagai berikut.
+Dataset pada file `ratings.csv` terdiri dari 4 kolom dan **33.832.162** baris data. Dataset ini berisi informasi mengenai rating yang diberikan pada film seperti informasi id pengguna yang memberi rating, id film yang diberi rating, informasi rating yang diberikan pengguna, dan juga kolom waktu. Penjelasan setiap kolom dijelaskan sebagai berikut.
 
 - `userId`: Berisi data identitas dari pengguna yang memberi rating film memiliki tipe data int64 (numerikal).
 - `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
@@ -137,13 +139,13 @@ Tabel ini berisi data mengenai film yang tersedia dalam sistem. Penjelasan tiap 
 
 ##### File: `ratings.csv`
 
-| userId | movieId | rating | timestamp  |
-|--------|---------|--------|------------|
-| 1      | 1       | 4.0    | 964982703  |
-| 1      | 3       | 4.0    | 964981247  |
-| 1      | 6       | 4.0    | 964982224  |
-| 1      | 47      | 5.0    | 964983815  |
-| 1      | 50      | 5.0    | 964982931  |
+| userId | movieId   | rating | timestamp   |
+|--------|-----------|--------|-------------|
+| 1      | 1         | 4.0    | 1225734739  |
+| 1      | 110       | 4.0    | 1225865086  |
+| 1      | 158       | 4.0    | 1225733503  |
+| 1      | 260       | 4.5    | 1225735204  |
+| 1      | 356       | 5.0    | 1225735119  |
 
 Tabel ini menyimpan informasi mengenai rating (penilaian) yang diberikan oleh pengguna terhadap film. Penjelasan tiap kolom:
 
@@ -225,17 +227,17 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 
     -  **Genre Terpopuler:**
 
-        * Genre *Comedy* mendominasi dataset dengan total **2.779 film**, diikuti oleh *Drama* (**2.226 film**) dan *Action* (**1.828 film**).
-        * Hal ini menunjukkan bahwa film bergenre komedi, drama, dan aksi adalah yang paling umum dalam dataset.
+        * Genre *Drama* mendominasi dataset dengan total **20.375 film**, diikuti oleh *Comedy* (**18.239 film**) dan *Action* (**9.563 film**).
+        * Hal ini menunjukkan bahwa film bergenre drama, komedi, dan aksi adalah yang paling umum dalam dataset.
 
   -  **Genre Kurang Umum:**
 
-        * Genre seperti *War*, *Film-Noir*, *Musical*, dan *Western* memiliki jumlah film yang sangat sedikit (di bawah 30 film).
+        * Genre seperti *IMAX* dan *Film-Noir* memiliki jumlah film yang sangat sedikit (di bawah 100 film).
         * Ini bisa berarti bahwa data yang tersedia untuk genre-genre ini terlalu sedikit untuk digunakan dalam pelatihan model sistem rekomendasi secara efektif.
 
   -  **Kehadiran Nilai Tidak Valid:**
 
-        * Terlihat masih ada kategori `"(no genres listed)"` dengan **23 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
+        * Terlihat masih ada kategori `"(no genres listed)"` dengan **7060 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
   
 - Distribusi data **rating** pada file `ratings.csv`
     <p align="center">
@@ -358,7 +360,74 @@ Data untuk genre Filmnoir:
 Tahap transformasi data merupakan tahap untuk mengubah bentuk atau format data mentah menjadi data yang siap untuk digunakan pemodelan. Proses transformasi data sangat penting dilakukan agar model yang dibangun memiliki performa yang baik. Berikut beberapa tahapan yang akan dilakukan dalam proses transformasi data:
 
 #### TF-IDF Vectorizer
+
+Dalam membangun sistem *Content-Based Filtering*, salah satu tahap penting adalah merepresentasikan data fitur dari item dalam bentuk vektor numerik yang dapat dihitung kemiripannya. Pada dataset **`movies.csv`**, kolom `genres` merupakan fitur penting yang mencerminkan konten dari masing-masing **`movies.csv`**. Untuk mengubah informasi tekstual pada kolom `genres` menjadi representasi numerik yang bermakna, digunakan teknik TF-IDF (*Term Frequency* - *Inverse Document Frequency*).
+
+Berikut rumus atau persamaan untuk mencari nilai dari TF-IDF
+
+**1. Term Frequency (TF)**
+
+Mengukur seberapa sering sebuah istilah $t$ muncul dalam sebuah dokumen $d$:
+
+$$
+\text{TF}(t, d) = \frac{f_{t,d}}{\sum_{k} f_{k,d}}
+$$
+
+* $f_{t,d}$ = jumlah kemunculan term $t$ dalam dokumen $d$
+* $\sum_{k} f_{k,d}$ = total semua term dalam dokumen $d$
+
+**2. Inverse Document Frequency (IDF)**
+
+Mengukur seberapa penting sebuah istilah $t$ secara global dalam seluruh dokumen:
+
+$$
+\text{IDF}(t) = \log \left( \frac{N}{n_t} \right)
+$$
+
+* $N$ = total jumlah dokumen
+* $n_t$ = jumlah dokumen yang mengandung term $t$
+
+> Catatan: Untuk menghindari pembagian dengan nol, sering digunakan versi modifikasi seperti:
+
+$$
+\text{IDF}(t) = \log \left( \frac{1 + N}{1 + n_t} \right) + 1
+$$
+
+**3. TF-IDF**
+
+$$
+\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \text{IDF}(t)
+$$
+
+Dengan rumus ini, TF-IDF memberikan nilai tinggi untuk istilah yang sering muncul dalam satu dokumen tetapi jarang muncul di seluruh dokumen, menjadikannya ideal untuk mengenali kata-kata yang unik dan penting dalam konteks tertentu.
+
+
 #### Cosine Similarity
+
+*Cosine similarity* digunakan untuk mengukur kemiripan antar dua dokumen (atau *item*) berdasarkan nilai vektor TF-IDF mereka. Dalam sistem rekomendasi, *cosine similarity* akan mengukur seberapa mirip dua film (atau *item*) berdasarkan genre yang telah diubah menjadi vektor TF-IDF. Cara untuk mencari nilai *cosine similarity* dari setiap *item* adalah sebagai berikut.
+
+Misalkan:
+
+* $A$ = vektor TF-IDF dari dokumen pertama (film A)
+* $B$ = vektor TF-IDF dari dokumen kedua (film B)
+
+$$
+\text{CosineSimilarity}(A, B) = \cos(\theta) = \frac{A \cdot B}{\|A\| \times \|B\|}
+$$
+
+* $A \cdot B$ = hasil dot product antara vektor A dan B
+* $\|A\|$ = panjang (magnitudo) vektor A
+* $\|B\|$ = panjang (magnitudo) vektor B
+
+$$
+\text{CosineSimilarity}(A, B) = \frac{\sum_{i=1}^{n} A_i \times B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \times \sqrt{\sum_{i=1}^{n} B_i^2}}
+$$
+
+Setelah menghasilkan matrix TF-IDF untuk semua film berdasarkan genre, cosine similarity dapat digunakan untuk:
+
+- Menentukan film mana yang paling mirip dengan film yang sedang ditonton pengguna.
+- Membuat rekomendasi film berdasarkan kemiripan konten.
+
 #### Data Encoding
 
 ### Data Splitting
