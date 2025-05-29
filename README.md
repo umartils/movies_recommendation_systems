@@ -77,18 +77,18 @@ Dataset ini terdiri dari beberapa fitur sebagai berikut:
 
 ```py
 <class 'pandas.core.frame.DataFrame'>
-RangeIndex: 86537 entries, 0 to 86536
+RangeIndex: 9742 entries, 0 to 9741
 Data columns (total 3 columns):
  #   Column   Non-Null Count  Dtype 
 ---  ------   --------------  ----- 
- 0   movieId  86537 non-null  int64 
- 1   title    86537 non-null  object
- 2   genres   86537 non-null  object
+ 0   movieId  9742 non-null   int64 
+ 1   title    9742 non-null   object
+ 2   genres   9742 non-null   object
 dtypes: int64(1), object(2)
-memory usage: 2.0+ MB
+memory usage: 228.5+ KB
 ```
 
-Dataset pada file `movies.csv` terdiri dari 3 kolom dan **86.537** baris data. Dataset ini berisi informasi mengenai film seperti informasi id film, judul film dan juga genre film. Penjelasan setiap kolom dijelaskan sebagai berikut.
+Dataset pada file `movies.csv` terdiri dari 3 kolom dan **9.742** baris data. Dataset ini berisi informasi mengenai film seperti informasi id film, judul film dan juga genre film. Penjelasan setiap kolom dijelaskan sebagai berikut.
 
 - `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
 - `title`: Berisi data judul dari film memiliki tipe data object (kategorikal).
@@ -100,19 +100,19 @@ Dataset ini terdiri dari beberapa fitur sebagai berikut:
 
 ```py
 <class 'pandas.core.frame.DataFrame'>
-RangeIndex: 33832162 entries, 0 to 33832161
+RangeIndex: 100836 entries, 0 to 100835
 Data columns (total 4 columns):
- #   Column     Dtype  
----  ------     -----  
- 0   userId     int64  
- 1   movieId    int64  
- 2   rating     float64
- 3   timestamp  int64  
+ #   Column     Non-Null Count   Dtype  
+---  ------     --------------   -----  
+ 0   userId     100836 non-null  int64  
+ 1   movieId    100836 non-null  int64  
+ 2   rating     100836 non-null  float64
+ 3   timestamp  100836 non-null  int64  
 dtypes: float64(1), int64(3)
-memory usage: 1.0 GB
+memory usage: 3.1 MB
 ```
 
-Dataset pada file `ratings.csv` terdiri dari 4 kolom dan **33.832.162** baris data. Dataset ini berisi informasi mengenai rating yang diberikan pada film seperti informasi id pengguna yang memberi rating, id film yang diberi rating, informasi rating yang diberikan pengguna, dan juga kolom waktu. Penjelasan setiap kolom dijelaskan sebagai berikut.
+Dataset pada file `ratings.csv` terdiri dari 4 kolom dan **100.836** baris data. Dataset ini berisi informasi mengenai rating yang diberikan pada film seperti informasi id pengguna yang memberi rating, id film yang diberi rating, informasi rating yang diberikan pengguna, dan juga kolom waktu. Penjelasan setiap kolom dijelaskan sebagai berikut.
 
 - `userId`: Berisi data identitas dari pengguna yang memberi rating film memiliki tipe data int64 (numerikal).
 - `movieId`: Berisi data identitas dari film memiliki tipe data int64 (numerikal).
@@ -227,17 +227,17 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 
     -  **Genre Terpopuler:**
 
-        * Genre *Drama* mendominasi dataset dengan total **20.375 film**, diikuti oleh *Comedy* (**18.239 film**) dan *Action* (**9.563 film**).
-        * Hal ini menunjukkan bahwa film bergenre drama, komedi, dan aksi adalah yang paling umum dalam dataset.
+        * Genre *Comedy* mendominasi dataset dengan total 2.779 film, diikuti oleh *Drama* (2.226 film) dan *Action* (1.828 film).
+        * Hal ini menunjukkan bahwa film bergenre komedi, drama, dan aksi adalah yang paling umum dalam dataset.
 
   -  **Genre Kurang Umum:**
 
-        * Genre seperti *IMAX* dan *Film-Noir* memiliki jumlah film yang sangat sedikit (di bawah 100 film).
+        * Genre seperti *War*, *Film-Noir*, *Musical*, dan *Western* memiliki jumlah film yang sangat sedikit (di bawah 30 film).
         * Ini bisa berarti bahwa data yang tersedia untuk genre-genre ini terlalu sedikit untuk digunakan dalam pelatihan model sistem rekomendasi secara efektif.
 
   -  **Kehadiran Nilai Tidak Valid:**
 
-        * Terlihat masih ada kategori `"(no genres listed)"` dengan **7060 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
+        * Terlihat masih ada kategori `"(no genres listed)"` dengan **23 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
   
 - Distribusi data **rating** pada file `ratings.csv`
     <p align="center">
@@ -246,11 +246,27 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 
     Berdasarkan visulisasi pada `Gambar 2`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
 
+    - **Rating 4.0 adalah yang paling umum diberikan**
 
+        * Dengan jumlah lebih dari **25 ribu**, rating ini menunjukkan bahwa banyak pengguna cenderung memberikan penilaian yang tinggi.
+        * Ini bisa menunjukkan bahwa sebagian besar film dinilai cukup baik oleh pengguna.
 
-##### File: `movies.csv`
+     - **Distribusi condong ke arah rating tinggi**
 
-##### File: `ratings.csv`
+        * Setelah 4.0, rating 3.0 dan 5.0 juga mendapatkan jumlah yang sangat tinggi, masing-masing lebih dari 20 ribu dan 13 ribu.
+        * Ini menunjukkan bahwa pengguna lebih sering memberikan rating **tengah hingga tinggi** (3.0–5.0) dibanding rating rendah.
+
+     - **Rating rendah sangat jarang diberikan**
+
+        * Rating seperti **0.5, 1.0, dan 1.5** memiliki jumlah yang jauh lebih kecil (di bawah 2 ribu), menunjukkan bahwa:
+
+          * Entah pengguna enggan memberikan rating rendah,
+          * Atau film yang sangat buruk relatif jarang dalam dataset.
+
+     - **Distribusi tidak simetris**
+
+        * Terlihat bahwa rating tidak tersebar merata; jumlah rating menurun secara signifikan setelah 4.0, menandakan distribusi **positif skew** (condong ke kiri).
+        * Rating 2.0 ke bawah memiliki distribusi yang relatif rendah.
 
 ## Data Preparation
 Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.
@@ -322,6 +338,51 @@ Pada tahap ini dilakukan proses pemilihan fitur untuk membangun model sistem rek
     Penjelasan:
 
     Pada dataset `movies.csv` dilakukan proses pemilihan fitur dengan menghapus nilai ***no_genres_listed*** pada kolom `genres`. Hal ini dilakukan untuk menghilangkan data yang tidak memiliki informasi genre yang berguna, sehingga analisis atau model yang dibangun nantinya tidak terpengaruh oleh entri yang tidak mengandung kategori genre yang valid. Dengan membersihkan data dari nilai seperti ***(no genres listed)***, kita memastikan bahwa setiap entri dalam kolom `genres` merepresentasikan minimal satu kategori genre yang dapat digunakan untuk keperluan klasifikasi, analisis statistik, atau visualisasi data.
+
+- Pemilihan fitur pada dataset `ratings.csv`
+  
+  - Menghapus fitur `timestamp`:
+    **Kode:**
+    ```py
+    clean_ratings = clean_ratings.drop(columns=['timestamp'], axis=1)
+    clean_ratings.info()
+    ```
+    **Output:**
+    ```py
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 100836 entries, 0 to 100835
+    Data columns (total 3 columns):
+    #   Column   Non-Null Count   Dtype  
+    ---  ------   --------------   -----  
+    0   userId   100836 non-null  int64  
+    1   movieId  100836 non-null  int64  
+    2   rating   100836 non-null  float64
+    dtypes: float64(1), int64(2)
+    memory usage: 2.3 MB
+    ```
+  - Menghapus nilai **movieId** yang tidak ada pada file `movies.csv`
+
+    **Kode:**
+    ```py
+    clean_ratings = clean_ratings[clean_ratings['movieId'].isin(clean_movies['movieId'])]
+    print(f"Jumlah data rating setelah menghapus film tidak relevan: {len(clean_ratings)}\n")
+    clean_ratings.info()
+    ```
+    **Output:**
+    ```py
+    Jumlah data rating setelah menghapus film tidak relevan: 100836
+
+    <class 'pandas.core.frame.DataFrame'>
+    RangeIndex: 100836 entries, 0 to 100835
+    Data columns (total 3 columns):
+    #   Column   Non-Null Count   Dtype  
+    ---  ------   --------------   -----  
+    0   userId   100836 non-null  int64  
+    1   movieId  100836 non-null  int64  
+    2   rating   100836 non-null  float64
+    dtypes: float64(1), int64(2)
+    memory usage: 2.3 MB
+    ```
 
     
 ### Text Processing
@@ -401,6 +462,19 @@ $$
 
 Dengan rumus ini, TF-IDF memberikan nilai tinggi untuk istilah yang sering muncul dalam satu dokumen tetapi jarang muncul di seluruh dokumen, menjadikannya ideal untuk mengenali kata-kata yang unik dan penting dalam konteks tertentu.
 
+Berikut penerapan metode TF-IDF untuk mengubah nilai pada fitur `genres` menjadi vektor numerik.
+
+**Kode:**
+```py
+tfidf = TfidfVectorizer()
+genre_tfid_cbf = tfidf.fit_transform(clean_movies['genres']) 
+genre_tfid_cbf.shape
+```
+**Output**
+```py
+(9708, 18)
+```
+Proses tersebut menghasilkan vektor numerik dengan ukuran (9708, 18) yang artinya terdapat 9708 baris film dengan 18 dimensi sesuai jumlah data unik dari genre
 
 #### Cosine Similarity
 
@@ -427,6 +501,26 @@ Setelah menghasilkan matrix TF-IDF untuk semua film berdasarkan genre, cosine si
 
 - Menentukan film mana yang paling mirip dengan film yang sedang ditonton pengguna.
 - Membuat rekomendasi film berdasarkan kemiripan konten.
+
+Berikut penerapan dari metode *cosine similarity*.
+
+**Kode:**
+```py
+genre_cosin_cbf = cosine_similarity(genre_tfid_cbf)
+genre_cosin_df = pd.DataFrame(genre_cosin_cbf, index=clean_movies['title'], columns=clean_movies['title'])
+genre_cosin_df.sample(5, axis=1, random_state=42).sample(5, axis=0, random_state=42)
+```
+
+**Output:**
+| title                              | Wrong Turn (2003) | Jewel of the Nile, The (1985) | Major Dundee (1965) | Vigilante Diaries (2016) | We Own the Night (2007) |
+|------------------------------------|--------------------|-------------------------------|----------------------|---------------------------|--------------------------|
+| Shattered (1991)                  | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+| Dirty Work (1998)                 | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+| Solaris (Solyaris) (1972)         | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+| Mississippi Burning (1988)       | 0.0                | 0.0                           | 0.0                  | 0.0                       | 1.0                      |
+| Late Marriage (Hatuna Meuheret) (2001) | 0.0           | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+
+Setiap baris mewakili satu film, dan setiap kolom juga mewakili film lain. Nilai di dalam tabel menunjukkan tingkat kemiripan antara dua film berdasarkan genre mereka, dihitung menggunakan cosine similarity. Jika data bernilai 0, berarti tidak ada kemiripan antar film, dan jika data bernilai 1, terdapat kemiripan antar film dilihat dari genre kedua film tersebut
 
 #### Data Encoding
 
