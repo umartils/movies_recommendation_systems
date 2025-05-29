@@ -653,6 +653,10 @@ history = model.fit(
 )
 ```
 
+<p align="center">
+<img src="https://github.com/user-attachments/assets/656c4049-43ee-4f41-a34a-502bdebf1681" alt="genres" />
+</p><div align="center">Gambar 1 - Distribusi Data Genre</div>
+
 Kurva pada Gambar 3 menunjukkan perkembangan nilai RMSE untuk data pelatihan (*train*) dan validasi (*test*) selama 30 epoch. Terlihat bahwa:
 
 - **RMSE pada data pelatihan** (garis biru) terus menurun secara konsisten seiring bertambahnya epoch, menunjukkan bahwa model semakin baik dalam mempelajari pola dari data pelatihan.
