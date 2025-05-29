@@ -653,11 +653,12 @@ history = model.fit(
 )
 ```
 
-Model dilatih selama **30 epoch** dengan **batch size sebesar 8**, menggunakan *loss function* **Binary Crossentropy** dan *optimizer* **Adam** dengan *learning rate* 0.001. Sebagai metrik evaluasi, digunakan **Root Mean Squared Error (RMSE)** untuk mengukur seberapa jauh prediksi model dari nilai sebenarnya. Selama proses pelatihan, model belajar memetakan hubungan antara pengguna dan film berdasarkan histori rating yang tersedia. Berikut proses pelatihan model dengan menampilkan kurva pelatihan.
+Kurva pada Gambar 3 menunjukkan perkembangan nilai RMSE untuk data pelatihan (*train*) dan validasi (*test*) selama 30 epoch. Terlihat bahwa:
 
-<p align="center">
-<img src="https://github.com/user-attachments/assets/656c4049-43ee-4f41-a34a-502bdebf1681" alt="learning_curve" />
-</p><div align="center">Gambar 3 - Learning Curve Model</div>
+- **RMSE pada data pelatihan** (garis biru) terus menurun secara konsisten seiring bertambahnya epoch, menunjukkan bahwa model semakin baik dalam mempelajari pola dari data pelatihan.
+- **RMSE pada data validasi** (garis oranye) mengalami penurunan pada awal pelatihan, kemudian cenderung stabil mulai sekitar epoch ke-10 hingga ke-30.
+
+Perbedaan kecil antara nilai RMSE pelatihan dan validasi menandakan bahwa model tidak mengalami ***overfitting***, dan mampu melakukan generalisasi dengan baik terhadap data yang belum pernah dilihat sebelumnya. Nilai akhir RMSE validasi yang berada di kisaran **0.2264** juga menunjukkan performa prediksi yang cukup baik untuk sistem rekomendasi berbasis ***collaborative filtering*** ini.
 
 ## Evaluation
 
@@ -737,6 +738,94 @@ Model *collaborative filtering* yang dikembangkan menggunakan pendekatan deep le
 - **RMSE Test**: 0.2264
 
 Nilai RMSE yang relatif rendah pada data training dan test menunjukkan bahwa model mampu mempelajari pola preferensi pengguna terhadap film dengan cukup baik, serta memiliki **generalisasi yang cukup baik** pada data yang tidak pernah dilihat sebelumnya (test set).
+
+Selanjutnya dilakukan proses pengujian model untuk mengetahui seberapa baik model memberikan rekomendasi berdasarkan rating yang pernah diberikan oleh pengguna. Berikut proses pengujian model dengan pendekatan *collaborative filtering*.
+
+**Kode**
+```py
+def run_recommendation_system(user_id, top_user_rated=5, n_recommendations=10):
+    user_encoder = user_to_user_encoded.get(user_id)
+    if user_encoder is None:
+        print(f"User ID {user_id} tidak ditemukan.")
+        return
+
+    # Membuat array input untuk prediksi
+    movies_array = np.hstack(
+        ([[user_encoder]] * len(movies_not_viewed), movies_not_viewed)
+    )
+    n_recommendations = n_recommendations + 3
+    # Prediksi rating untuk film yang belum ditonton
+    ratings = model.predict(movies_array).flatten()
+
+    # Ambil indeks top-N rekomendasi tertinggi
+    top_ratings_indices = ratings.argsort()[-n_recommendations:][::-1]
+    recommended_movies_ids = [
+        movies_not_viewed[x][0] for x in top_ratings_indices
+    ]
+
+    print('Showing recommendations for user:', user_id)
+    print('===' * 13)
+    print('Movies with high ratings from user')
+    print('----' * 8)
+
+    # Ambil top-N film yang diberi rating tinggi oleh user
+    top_movies_user = (
+        movies_viewed_by_user
+        .sort_values(by='rating', ascending=False)
+        .head(top_user_rated)
+        .movieId.values
+    )
+
+    movies_df_rows = movies_df[movies_df['movieId'].isin(top_movies_user)]
+    for row in movies_df_rows.itertuples():
+        print(row.title, ':', row.genres)
+
+    print('----' * 8)
+    print(f'Top {n_recommendations-3} movie recommendations')
+    print('----' * 8)
+
+    recommended_movies = movies_df[movies_df['movieId'].isin(recommended_movies_ids)]
+    for row in recommended_movies.itertuples():
+        print(row.title, ':', row.genres)
+
+run_recommendation_system(4, top_user_rated=5, n_recommendations=10)
+```
+
+**Output**
+```
+273/273 [==============================] - 0s 1ms/step
+Showing recommendations for user: 4
+=======================================
+Movies with high ratings from user
+--------------------------------
+Fargo (1996) : Comedy
+8 1/2 (8½) (1963) : Drama
+Peter's Friends (1992) : Comedy
+Catch-22 (1970) : Comedy
+Lost and Delirious (2001) : Drama
+--------------------------------
+Top 10 movie recommendations
+--------------------------------
+Baby-Sitters Club, The (1995) : Children
+'Til There Was You (1997) : Drama
+First Wives Club, The (1996) : Comedy
+Breakfast at Tiffany's (1961) : Drama
+Cat from Outer Space, The (1978) : Children
+Incredible Journey, The (1963) : Adventure
+Trip to Bountiful, The (1985) : Drama
+Weird Science (1985) : Comedy
+Bachelor, The (1999) : Comedy
+Stuart Little (1999) : Children
+```
+
+Berdasarkan hasil pengujian di atas, dapat diketahui model sistem rekomendasi yang dibangun memiliki performa sebagai berikut.
+
+- Model berhasil merekomendasikan film dengan **genre yang sesuai** dengan preferensi pengguna sebelumnya, seperti:
+
+  * **First Wives Club, The (1996)**, **Weird Science (1985)** dan **Bachelor, The (1999)** — genre *Comedy*
+  * **'Til There Was You (1997)**, **Breakfast at Tiffany's (1961)**, dan **Trip to Bountiful, The (1985)** — genre *Drama*
+
+- Meskipun terdapat juga rekomendasi dari genre yang berbeda (**Children** dan **Adventure**), hal ini mencerminkan kemampuan model dalam melakukan eksplorasi terhadap item baru, yang dapat memperluas cakupan rekomendasi dan memberikan variasi kepada pengguna.
 
 
 ## Referensi
