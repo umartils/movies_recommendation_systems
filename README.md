@@ -139,13 +139,13 @@ Tabel ini berisi data mengenai film yang tersedia dalam sistem. Penjelasan tiap 
 
 ##### File: `ratings.csv`
 
-| userId | movieId   | rating | timestamp   |
-|--------|-----------|--------|-------------|
-| 1      | 1         | 4.0    | 1225734739  |
-| 1      | 110       | 4.0    | 1225865086  |
-| 1      | 158       | 4.0    | 1225733503  |
-| 1      | 260       | 4.5    | 1225735204  |
-| 1      | 356       | 5.0    | 1225735119  |
+| userId | movieId   | rating | timestamp  |
+|--------|-----------|--------|------------|
+| 1      | 1         | 4.0    | 964981247  |
+| 1      | 110       | 4.0    | 964981247  |
+| 1      | 158       | 4.0    | 964982224  |
+| 1      | 260       | 4.5    | 964983815  |
+| 1      | 356       | 5.0    | 964982931  |
 
 Tabel ini menyimpan informasi mengenai rating (penilaian) yang diberikan oleh pengguna terhadap film. Penjelasan tiap kolom:
 
@@ -220,7 +220,7 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 - Distribusi data **genres** pada file `movies.csv`
   
     <p align="center">
-    <img src="https://github.com/user-attachments/assets/96884440-8397-4c6f-9412-556b65da4496" alt="genres" />
+    <img src="https://github.com/user-attachments/assets/d5cd5066-5168-46ae-aa70-ef94a995eea8" alt="genres" />
     </p><div align="center">Gambar 1 - Distribusi Data Genre</div>
 
     Berdasarkan visulisasi pada `Gambar 1`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
@@ -241,7 +241,7 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
   
 - Distribusi data **rating** pada file `ratings.csv`
     <p align="center">
-    <img src="https://github.com/user-attachments/assets/cf61716f-87ef-4500-b05f-cc3eb8b7acde" alt="rating" />
+    <img src="https://github.com/user-attachments/assets/d3d9d25d-53c3-4cc9-b3b8-49f8149b4956" alt="rating" />
     </p><div align="center">Gambar 2 - Distribusi Data Rating</div>
 
     Berdasarkan visulisasi pada `Gambar 2`, terdapat beberapa informasi yang dijelaskan sebagai berikut.
