@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Laporan Proyek Machine Learning - Umar Tilmisani</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="laporan-proyek-machine-learning---umar-tilmisani">Laporan Proyek Machine Learning - Umar Tilmisani</h1>
+<h2 id="project-overview">Project Overview</h2>
+<p>Dalam era digital saat ini, jumlah konten hiburan seperti film dan serial televisi meningkat secara eksponensial. Platform penyedia layanan streaming seperti Netflix, Disney+, dan Amazon Prime Video menawarkan ribuan pilihan kepada pengguna. Namun, keberlimpahan pilihan ini justru dapat menimbulkan tantangan tersendiri bagi pengguna dalam memilih film yang sesuai dengan preferensi mereka. Oleh karena itu, dibutuhkan sistem yang mampu membantu pengguna untuk menemukan film yang relevan dan menarik secara otomatis dan personal. Sistem inilah yang dikenal sebagai sistem rekomendasi film (<em>movie recommendation system</em>).</p>
+<p>Sistem rekomendasi merupakan cabang dari bidang <em>Information Retrieval</em> dan <em>Machine Learning</em> yang dirancang untuk memprediksi preferensi pengguna terhadap suatu item berdasarkan data historis. Dalam konteks film, sistem rekomendasi dapat menggunakan informasi seperti histori penilaian (rating), genre film, atau kesamaan perilaku antar pengguna. Dua pendekatan utama yang banyak digunakan dalam sistem rekomendasi adalah <em>content-based filtering</em> dan <em>collaborative filtering</em>. Pendekatan <em>content-based</em> memanfaatkan fitur dari film seperti genre dan deskripsi, sedangkan <em>collaborative filtering</em> menggunakan data perilaku pengguna lain yang memiliki kesamaan preferensi [1].</p>
+<p>Netflix, misalnya, mengklaim bahwa lebih dari 75% film yang ditonton pengguna berasal dari sistem rekomendasi mereka [2]. Hal ini menunjukkan betapa pentingnya sistem ini dalam meningkatkan kepuasan pengguna, waktu tayang (watch time), serta loyalitas terhadap platform. Selain itu, sistem rekomendasi juga memainkan peran besar dalam strategi bisnis karena mampu meningkatkan engagement dan mengurangi tingkat berhenti berlangganan (<em>churn</em>).</p>
+<p>Seiring perkembangan teknologi, algoritma yang digunakan dalam sistem rekomendasi pun semakin canggih, mulai dari pendekatan sederhana berbasis <em>k-Nearest Neighbors (k-NN)</em> hingga pendekatan berbasis <em>deep learning</em> seperti <em>neural collaborative filtering</em>. Oleh karena itu, membangun proyek sistem rekomendasi film menjadi salah satu tantangan sekaligus peluang yang menarik dalam bidang data science dan kecerdasan buatan.</p>
+<h2 id="business-understanding">Business Understanding</h2>
+<p>Dalam merancang sistem rekomendasi film, pemahaman terhadap kebutuhan bisnis merupakan aspek krusial agar solusi yang dihasilkan tidak hanya unggul secara teknis, tetapi juga mampu menjawab tantangan nyata yang dihadapi pengguna. Tujuan utama dari sistem rekomendasi ini adalah untuk memperkaya pengalaman pengguna melalui rekomendasi film yang lebih tepat dan personal, serta mendukung platform streaming dalam meningkatkan tingkat retensi dan keterlibatan pengguna.</p>
+<h3 id="problem-statements">Problem Statements</h3>
+<ul>
+<li>Bagaimana langkah-langkah dalam mengenali serta mengumpulkan informasi dari data yang digunakan untuk membangun model sistem rekomendasi?</li>
+<li>Bagaimana proses perancangan model sistem rekomendasi dengan pendekatan <em>content-based filtering</em>?</li>
+<li>Bagaimana metode yang digunakan untuk membangun model rekomendasi menggunakan pendekatan <em>collaborative filtering</em>?</li>
+<li>Bagaimana cara mengevaluasi performa dari model sistem rekomendasi yang telah dibuat?</li>
+</ul>
+<h3 id="goals">Goals</h3>
+<ul>
+<li>Melakukan analisis awal terhadap data serta visualisasi untuk memperoleh pemahaman mengenai struktur dan sifat dari dataset yang digunakan.</li>
+<li>Merancang sistem rekomendasi film dengan memanfaatkan pendekatan content-based filtering.</li>
+<li>Mengembangkan sistem rekomendasi film menggunakan metode collaborative filtering.</li>
+<li>Melakukan evaluasi terhadap performa model rekomendasi yang telah dibangun dengan menggunakan metrik evaluasi yang tepat.</li>
+</ul>
+<h3 id="solution-approach">Solution Approach</h3>
+<p>Untuk menjawab rumusan masalah dan mencapai target yang telah ditetapkan, diperlukan strategi penyelesaian yang sistematis dan terorganisir, yang meliputi langkah-langkah berikut:</p>
+<p><strong>Eksplorasi Data Awal:</strong>
+Tahapan pertama dari proyek ini adalah memahami karakteristik dataset melalui proses exploratory data analysis (EDA). Aktivitas ini mencakup analisis terhadap jumlah baris dan kolom, jenis data, distribusi nilai, serta visualisasi grafik yang dapat membantu dalam mengenali pola umum maupun anomali dalam data.</p>
+<p><strong>Pengembangan Sistem Rekomendasi dengan Content-Based Filtering:</strong>
+Langkah ini diawali dengan proses pembersihan data (data cleaning) yang mencakup:</p>
+<ul>
+<li>Menghapus data duplikat dan <em>missing values</em> atau nilai kosong (NaN)</li>
+<li>Mengeliminasi kolom yang tidak relevan</li>
+<li>Melakukan pemrosesan terhadap data teks</li>
+</ul>
+<p>Selanjutnya, dilakukan transformasi data seperti vektorisasi teks dengan metode TF-IDF dan perhitungan kesamaan antar item menggunakan cosine similarity. Tahap akhir adalah merancang fungsi rekomendasi serta melakukan pengujian prediksi.</p>
+<p><strong>Pengembangan Sistem Rekomendasi dengan Collaborative Filtering:</strong>
+Proses ini juga dimulai dari pembersihan dan persiapan data, yang meliputi:</p>
+<ul>
+<li>Menghapus data yang duplikat dan tidak valid</li>
+<li>Melakukan encoding pada variabel kategorikal</li>
+<li>Membagi data menjadi set pelatihan dan pengujian (train-test split)</li>
+</ul>
+<p><strong>Evaluasi Kinerja Model:</strong>
+Penilaian terhadap performa model dilakukan untuk memastikan efektivitas hasil yang diperoleh:</p>
+<ul>
+<li>Pada model content-based filtering, digunakan metrik seperti Precision untuk menilai akurasi dari rekomendasi yang dihasilkan.</li>
+<li>Sementara pada model collaborative filtering, digunakan metrik Root Mean Squared Error (RMSE) untuk mengukur tingkat kesalahan dalam prediksi rating pengguna.</li>
+</ul>
+<h2 id="data-understanding">Data Understanding</h2>
+<p><em>Dataset</em> yang digunakan pada proyek ini adalah data <strong>&quot;<em>MovieLens Latest Dataset</em>&quot;</strong> yang dapat diakses secara publik atau <em>open-source</em> pada situs web GroupLens. Untuk dataset sendiri dapat diakses dan diunduh melalui link <a href="https://grouplens.org/datasets/movielens/">MovieLens Dataset by GroupLens</a>.
+Terdapat beberapa file pada dataset ini seperti file <code>links.csv</code>, <code>movies.csv</code>, <code>ratings.csv</code>, dan <code>tags.csv</code>. Namun dataset yang digunakan pada proyek ini hanya dataset <code>movies.csv</code> dan <code>ratings.csv</code> dengan rincian dataset sebagai berikut.</p>
+<ul>
+<li><code>movies.csv</code>: Berisi data film seperti judul film, identitas film dan genre film. Dataset ini akan digunakan untuk membangun model sistem rekomendasi dengan pendekatan <em>content-based filtering</em></li>
+<li><code>ratings.csv</code>: Berisi data rating film yang diberikan oleh pengguna seperti identitas pengguna, identitas film, dan rating film. Dataset ini akan digunakan untuk membangun model sistem rekomendasi dengan pendekatan <em>collaborative filtering</em>.</li>
+</ul>
+<p>Selanjutnya, dilakukan tahap <em>Exploratory Data Analysis</em> (EDA)  untuk meningkatkan pemahaman mengenai data yang digunakan.</p>
+<h3 id="exploratory-data-analysis-eda">Exploratory Data Analysis (EDA)</h3>
+<h4 id="fitur-fitur-pada-dataset">Fitur-fitur Pada Dataset</h4>
+<h5 id="file-moviescsv">File: <code>movies.csv</code></h5>
+<p>Dataset ini terdiri dari beberapa fitur sebagai berikut:</p>
+<pre><code class="language-py">&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;pandas.core.frame.DataFrame&#x27;</span>&gt;
+RangeIndex: <span class="hljs-number">9742</span> entries, <span class="hljs-number">0</span> to <span class="hljs-number">9741</span>
+Data columns (total <span class="hljs-number">3</span> columns):
+ <span class="hljs-comment">#   Column   Non-Null Count  Dtype </span>
+---  ------   --------------  ----- 
+ <span class="hljs-number">0</span>   movieId  <span class="hljs-number">9742</span> non-null   int64 
+ <span class="hljs-number">1</span>   title    <span class="hljs-number">9742</span> non-null   <span class="hljs-built_in">object</span>
+ <span class="hljs-number">2</span>   genres   <span class="hljs-number">9742</span> non-null   <span class="hljs-built_in">object</span>
+dtypes: int64(<span class="hljs-number">1</span>), <span class="hljs-built_in">object</span>(<span class="hljs-number">2</span>)
+memory usage: <span class="hljs-number">228.5</span>+ KB
+</code></pre>
+<p>Dataset pada file <code>movies.csv</code> terdiri dari 3 kolom dan <strong>9.742</strong> baris data. Dataset ini berisi informasi mengenai film seperti informasi id film, judul film dan juga genre film. Penjelasan setiap kolom dijelaskan sebagai berikut.</p>
+<ul>
+<li><code>movieId</code>: Berisi data identitas dari film memiliki tipe data int64 (numerikal).</li>
+<li><code>title</code>: Berisi data judul dari film memiliki tipe data object (kategorikal).</li>
+<li><code>genres</code>: Berisi data genre dari film memiliki tipe data object (kategorikal).</li>
+</ul>
+<h5 id="file-ratingscsv">File: <code>ratings.csv</code></h5>
+<p>Dataset ini terdiri dari beberapa fitur sebagai berikut:</p>
+<pre><code class="language-py">&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;pandas.core.frame.DataFrame&#x27;</span>&gt;
+RangeIndex: <span class="hljs-number">100836</span> entries, <span class="hljs-number">0</span> to <span class="hljs-number">100835</span>
+Data columns (total <span class="hljs-number">4</span> columns):
+ <span class="hljs-comment">#   Column     Non-Null Count   Dtype  </span>
+---  ------     --------------   -----  
+ <span class="hljs-number">0</span>   userId     <span class="hljs-number">100836</span> non-null  int64  
+ <span class="hljs-number">1</span>   movieId    <span class="hljs-number">100836</span> non-null  int64  
+ <span class="hljs-number">2</span>   rating     <span class="hljs-number">100836</span> non-null  float64
+ <span class="hljs-number">3</span>   timestamp  <span class="hljs-number">100836</span> non-null  int64  
+dtypes: float64(<span class="hljs-number">1</span>), int64(<span class="hljs-number">3</span>)
+memory usage: <span class="hljs-number">3.1</span> MB
+</code></pre>
+<p>Dataset pada file <code>ratings.csv</code> terdiri dari 4 kolom dan <strong>100.836</strong> baris data. Dataset ini berisi informasi mengenai rating yang diberikan pada film seperti informasi id pengguna yang memberi rating, id film yang diberi rating, informasi rating yang diberikan pengguna, dan juga kolom waktu. Penjelasan setiap kolom dijelaskan sebagai berikut.</p>
+<ul>
+<li><code>userId</code>: Berisi data identitas dari pengguna yang memberi rating film memiliki tipe data int64 (numerikal).</li>
+<li><code>movieId</code>: Berisi data identitas dari film memiliki tipe data int64 (numerikal).</li>
+<li><code>rating</code>: Berisi data rating dari film memiliki tipe data float64 (numerikal).</li>
+<li><code>timestamp</code>: Berisi data waktu pada saat pengguna memberikan rating memiliki tipe data int64 (numerikal).</li>
+</ul>
+<h4 id="melihat-ringkasan-data">Melihat Ringkasan Data</h4>
+<h5 id="file-moviescsv-1">File: <code>movies.csv</code></h5>
+<table>
+<thead>
+<tr>
+<th>movieId</th>
+<th>title</th>
+<th>genres</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Toy Story (1995)</td>
+<td>Adventure|Animation|Children|Comedy|Fantasy</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Jumanji (1995)</td>
+<td>Adventure|Children|Fantasy</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Grumpier Old Men (1995)</td>
+<td>Comedy|Romance</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Waiting to Exhale (1995)</td>
+<td>Comedy|Drama|Romance</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Father of the Bride Part II (1995)</td>
+<td>Comedy</td>
+</tr>
+</tbody>
+</table>
+<p>Tabel ini berisi data mengenai film yang tersedia dalam sistem. Penjelasan tiap kolom:</p>
+<ul>
+<li><code>movieId</code> adalah ID unik yang digunakan untuk mengidentifikasi setiap film. Nilai ini menjadi acuan utama dan sering digunakan untuk menghubungkan data antar tabel.</li>
+<li><code>title</code> berisi judul film lengkap dengan tahun rilisnya dalam tanda kurung. Contohnya: <em>Toy Story (1995)</em>.</li>
+<li><code>genres</code> adalah daftar kategori atau genre dari film tersebut. Genre dipisahkan dengan tanda &quot;|&quot; (pipe). Contoh: <em>Adventure|Animation|Children|Comedy|Fantasy</em>.</li>
+</ul>
+<h5 id="file-ratingscsv-1">File: <code>ratings.csv</code></h5>
+<table>
+<thead>
+<tr>
+<th>userId</th>
+<th>movieId</th>
+<th>rating</th>
+<th>timestamp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>4.0</td>
+<td>964981247</td>
+</tr>
+<tr>
+<td>1</td>
+<td>110</td>
+<td>4.0</td>
+<td>964981247</td>
+</tr>
+<tr>
+<td>1</td>
+<td>158</td>
+<td>4.0</td>
+<td>964982224</td>
+</tr>
+<tr>
+<td>1</td>
+<td>260</td>
+<td>4.5</td>
+<td>964983815</td>
+</tr>
+<tr>
+<td>1</td>
+<td>356</td>
+<td>5.0</td>
+<td>964982931</td>
+</tr>
+</tbody>
+</table>
+<p>Tabel ini menyimpan informasi mengenai rating (penilaian) yang diberikan oleh pengguna terhadap film. Penjelasan tiap kolom:</p>
+<ul>
+<li><code>userId</code> menunjukkan ID unik dari pengguna yang memberikan rating.</li>
+<li><code>movieId</code> merujuk pada film yang dinilai oleh pengguna, dan nilainya cocok dengan movieId di tabel film.</li>
+<li><code>rating</code> menunjukkan nilai penilaian dari pengguna terhadap film, biasanya dalam skala 0.5 hingga 5.0.</li>
+<li><code>timestamp</code> adalah waktu ketika rating diberikan, dalam format UNIX timestamp (jumlah detik sejak 1 Januari 1970).</li>
+</ul>
+<h4 id="memeriksa-nilai-kosong-dan-data-duplikat">Memeriksa Nilai Kosong dan Data Duplikat</h4>
+<p>Pada tahap ini dilakukan proses pemeriksaan nilai kosong pada data dan juga memeriksa data yang duplikat. Hal ini dilakukan agar dataset yang digunakan untuk modeling memiliki kualitas yang baik. Berikut proses dari tahap memeriksa nilai kosong dan data duplikat.</p>
+<h5 id="file-moviescsv-2">File: <code>movies.csv</code></h5>
+<ul>
+<li>
+<p>Kode</p>
+<pre><code class="language-py">
+movies = pd.read_csv(<span class="hljs-string">&quot;movies.csv&quot;</span>)
+null_val = movies.isna().<span class="hljs-built_in">sum</span>()
+duplicated_data = movies.duplicated().<span class="hljs-built_in">sum</span>()
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=============================================&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Jumlah Missing Values Pada Dataset Movies: \n<span class="hljs-subst">{null_val}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Jumlah Data Duplikat Pada Dataset Movies: <span class="hljs-subst">{duplicated_data}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=============================================&quot;</span>)
+</code></pre>
+</li>
+<li>
+<p>Output</p>
+<pre><code class="language-py">=============================================
+Jumlah Missing Values Pada Dataset Movies: 
+movieId    <span class="hljs-number">0</span>
+title      <span class="hljs-number">0</span>
+genres     <span class="hljs-number">0</span>
+dtype: int64
+Jumlah Data Duplikat Pada Dataset Movies: <span class="hljs-number">0</span>
+=============================================
+</code></pre>
+</li>
+</ul>
+<h5 id="file-ratingscsv-2">File: <code>ratings.csv</code></h5>
+<ul>
+<li>
+<p>Kode</p>
+<pre><code class="language-py">
+ratings = pd.read_csv(<span class="hljs-string">&quot;ratings.csv&quot;</span>)
+null_val = ratings.isna().<span class="hljs-built_in">sum</span>()
+duplicated_data = ratings.duplicated().<span class="hljs-built_in">sum</span>()
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=============================================&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Jumlah Missing Values Pada Dataset Ratings: \n<span class="hljs-subst">{null_val}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Jumlah Data Duplikat Pada Dataset Ratings: <span class="hljs-subst">{duplicated_data}</span>&quot;</span>)
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;=============================================&quot;</span>)
+</code></pre>
+</li>
+<li>
+<p>Output</p>
+<pre><code class="language-py">=============================================
+Jumlah Missing Values Pada Dataset Ratings: 
+userId       <span class="hljs-number">0</span>
+movieId      <span class="hljs-number">0</span>
+rating       <span class="hljs-number">0</span>
+timestamp    <span class="hljs-number">0</span>
+dtype: int64
+Jumlah Data Duplikat Pada Dataset Ratings: <span class="hljs-number">0</span>
+=============================================
+</code></pre>
+</li>
+</ul>
+<h4 id="analisis-distribusi-data">Analisis Distribusi Data</h4>
+<p>Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fitur yang akan digunakan untuk pemodelan pada setiap dataset.</p>
+<ul>
+<li>
+<p>Distribusi data <strong>genres</strong> pada file <code>movies.csv</code></p>
+  <p align="center">
+  <img src="https://github.com/user-attachments/assets/d5cd5066-5168-46ae-aa70-ef94a995eea8" alt="genres" />
+  </p><div align="center">Gambar 1 - Distribusi Data Genre</div>
+<p>Berdasarkan visulisasi pada <code>Gambar 1</code>, terdapat beberapa informasi yang dijelaskan sebagai berikut.</p>
+<ul>
+<li>
+<p><strong>Genre Terpopuler:</strong></p>
+<ul>
+<li>Genre <em>Comedy</em> mendominasi dataset dengan total 2.779 film, diikuti oleh <em>Drama</em> (2.226 film) dan <em>Action</em> (1.828 film).</li>
+<li>Hal ini menunjukkan bahwa film bergenre komedi, drama, dan aksi adalah yang paling umum dalam dataset.</li>
+</ul>
+</li>
+<li>
+<p><strong>Genre Kurang Umum:</strong></p>
+<ul>
+<li>Genre seperti <em>War</em>, <em>Film-Noir</em>, <em>Musical</em>, dan <em>Western</em> memiliki jumlah film yang sangat sedikit (di bawah 30 film).</li>
+<li>Ini bisa berarti bahwa data yang tersedia untuk genre-genre ini terlalu sedikit untuk digunakan dalam pelatihan model sistem rekomendasi secara efektif.</li>
+</ul>
+</li>
+<li>
+<p><strong>Kehadiran Nilai Tidak Valid:</strong></p>
+<ul>
+<li>Terlihat masih ada kategori <code>&quot;(no genres listed)&quot;</code> dengan <strong>23 film</strong> Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Distribusi data <strong>rating</strong> pada file <code>ratings.csv</code></p>
+  <p align="center">
+  <img src="https://github.com/user-attachments/assets/d3d9d25d-53c3-4cc9-b3b8-49f8149b4956" alt="rating" />
+  </p><div align="center">Gambar 2 - Distribusi Data Rating</div>
+<p>Berdasarkan visulisasi pada <code>Gambar 2</code>, terdapat beberapa informasi yang dijelaskan sebagai berikut.</p>
+<ul>
+<li>
+<p><strong>Rating 4.0 adalah yang paling umum diberikan</strong></p>
+<ul>
+<li>Dengan jumlah lebih dari <strong>25 ribu</strong>, rating ini menunjukkan bahwa banyak pengguna cenderung memberikan penilaian yang tinggi.</li>
+<li>Ini bisa menunjukkan bahwa sebagian besar film dinilai cukup baik oleh pengguna.</li>
+</ul>
+</li>
+<li>
+<p><strong>Distribusi condong ke arah rating tinggi</strong></p>
+<ul>
+<li>Setelah 4.0, rating 3.0 dan 5.0 juga mendapatkan jumlah yang sangat tinggi, masing-masing lebih dari 20 ribu dan 13 ribu.</li>
+<li>Ini menunjukkan bahwa pengguna lebih sering memberikan rating <strong>tengah hingga tinggi</strong> (3.0–5.0) dibanding rating rendah.</li>
+</ul>
+</li>
+<li>
+<p><strong>Rating rendah sangat jarang diberikan</strong></p>
+<ul>
+<li>
+<p>Rating seperti <strong>0.5, 1.0, dan 1.5</strong> memiliki jumlah yang jauh lebih kecil (di bawah 2 ribu), menunjukkan bahwa:</p>
+<ul>
+<li>Entah pengguna enggan memberikan rating rendah,</li>
+<li>Atau film yang sangat buruk relatif jarang dalam dataset.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>Distribusi tidak simetris</strong></p>
+<ul>
+<li>Terlihat bahwa rating tidak tersebar merata; jumlah rating menurun secara signifikan setelah 4.0, menandakan distribusi <strong>positif skew</strong> (condong ke kiri).</li>
+<li>Rating 2.0 ke bawah memiliki distribusi yang relatif rendah.</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="data-preparation">Data Preparation</h2>
+<p>Pada bagian ini Anda menerapkan dan menyebutkan teknik data preparation yang dilakukan. Teknik yang digunakan pada notebook dan laporan harus berurutan.</p>
+<h3 id="data-cleaning">Data Cleaning</h3>
+<p>Pada tahap ini, dilakukan pembersihan data agar data yang digunakan memiliki kualitas yang baik. Pada tahap ini dilakukan tahap penghapusan nilai kosong dan data duplikat. Berikut penerapan dari tahap <em>data cleaning</em>.</p>
+<ul>
+<li>
+<p>Menangani Missing Values dan Duplicated Data pada Dataset Movies</p>
+<p><strong>Kode:</strong></p>
+<pre><code class="language-py">clean_movies = movies.dropna().drop_duplicates()
+clean_movies.info()
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-py">&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;pandas.core.frame.DataFrame&#x27;</span>&gt;
+RangeIndex: <span class="hljs-number">9742</span> entries, <span class="hljs-number">0</span> to <span class="hljs-number">9741</span>
+Data columns (total <span class="hljs-number">3</span> columns):
+<span class="hljs-comment">#   Column   Non-Null Count  Dtype </span>
+---  ------   --------------  ----- 
+<span class="hljs-number">0</span>   movieId  <span class="hljs-number">9742</span> non-null   int64 
+<span class="hljs-number">1</span>   title    <span class="hljs-number">9742</span> non-null   <span class="hljs-built_in">object</span>
+<span class="hljs-number">2</span>   genres   <span class="hljs-number">9742</span> non-null   <span class="hljs-built_in">object</span>
+dtypes: int64(<span class="hljs-number">1</span>), <span class="hljs-built_in">object</span>(<span class="hljs-number">2</span>)
+memory usage: <span class="hljs-number">228.5</span>+ KB
+</code></pre>
+</li>
+<li>
+<p>Menangani Missing Values dan Duplicated Data pada Dataset Ratings</p>
+<p><strong>Kode:</strong></p>
+<pre><code class="language-py">clean_ratings = ratings.dropna().drop_duplicates()
+clean_ratings.info()
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-py">&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;pandas.core.frame.DataFrame&#x27;</span>&gt;
+RangeIndex: <span class="hljs-number">100836</span> entries, <span class="hljs-number">0</span> to <span class="hljs-number">100835</span>
+Data columns (total <span class="hljs-number">4</span> columns):
+<span class="hljs-comment">#   Column     Non-Null Count   Dtype  </span>
+---  ------     --------------   -----  
+<span class="hljs-number">0</span>   userId     <span class="hljs-number">100836</span> non-null  int64  
+<span class="hljs-number">1</span>   movieId    <span class="hljs-number">100836</span> non-null  int64  
+<span class="hljs-number">2</span>   rating     <span class="hljs-number">100836</span> non-null  float64
+<span class="hljs-number">3</span>   timestamp  <span class="hljs-number">100836</span> non-null  int64  
+dtypes: float64(<span class="hljs-number">1</span>), int64(<span class="hljs-number">3</span>)
+memory usage: <span class="hljs-number">3.1</span> MB
+</code></pre>
+</li>
+</ul>
+<h3 id="pemilihan-fitur">Pemilihan Fitur</h3>
+<p>Pada tahap ini dilakukan proses pemilihan fitur untuk membangun model sistem rekomendasi pada setiap dataset. Tahap ini dilakukan agar model yang dibangun memiliki performa baik. Karena tidak semua fitur pada data berisi informasi yang relevan dengan model sistem rekomendasi yang akan dibangun. Berikut proses pemilihan fitur pada setiap dataset.</p>
+<ul>
+<li>
+<p>Pemilihan fitur pada dataset <code>movies.csv</code></p>
+<p><strong>Kode:</strong></p>
+<pre><code class="language-py">clean_movies = clean_movies[clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>] != <span class="hljs-string">&#x27;(no genres listed)&#x27;</span>] 
+clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>].unique()
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-py">array([<span class="hljs-string">&#x27;Adventure&#x27;</span>, <span class="hljs-string">&#x27;Comedy&#x27;</span>, <span class="hljs-string">&#x27;Action&#x27;</span>, <span class="hljs-string">&#x27;Drama&#x27;</span>, <span class="hljs-string">&#x27;Crime&#x27;</span>, <span class="hljs-string">&#x27;Children&#x27;</span>,
+<span class="hljs-string">&#x27;Mystery&#x27;</span>, <span class="hljs-string">&#x27;Animation&#x27;</span>, <span class="hljs-string">&#x27;Documentary&#x27;</span>, <span class="hljs-string">&#x27;Thriller&#x27;</span>, <span class="hljs-string">&#x27;Horror&#x27;</span>,
+<span class="hljs-string">&#x27;Fantasy&#x27;</span>, <span class="hljs-string">&#x27;Western&#x27;</span>, <span class="hljs-string">&#x27;Film-Noir&#x27;</span>, <span class="hljs-string">&#x27;Romance&#x27;</span>, <span class="hljs-string">&#x27;Sci-Fi&#x27;</span>, <span class="hljs-string">&#x27;Musical&#x27;</span>,
+<span class="hljs-string">&#x27;War&#x27;</span>], dtype=<span class="hljs-built_in">object</span>)
+</code></pre>
+<p>Penjelasan:</p>
+<p>Pada dataset <code>movies.csv</code> dilakukan proses pemilihan fitur dengan menghapus nilai <em><strong>no_genres_listed</strong></em> pada kolom <code>genres</code>. Hal ini dilakukan untuk menghilangkan data yang tidak memiliki informasi genre yang berguna, sehingga analisis atau model yang dibangun nantinya tidak terpengaruh oleh entri yang tidak mengandung kategori genre yang valid. Dengan membersihkan data dari nilai seperti <em><strong>(no genres listed)</strong></em>, kita memastikan bahwa setiap entri dalam kolom <code>genres</code> merepresentasikan minimal satu kategori genre yang dapat digunakan untuk keperluan klasifikasi, analisis statistik, atau visualisasi data.</p>
+</li>
+<li>
+<p>Pemilihan fitur pada dataset <code>ratings.csv</code></p>
+<ul>
+<li>
+<p>Menghapus fitur <code>timestamp</code>:
+<strong>Kode:</strong></p>
+<pre><code class="language-py">clean_ratings = clean_ratings.drop(columns=[<span class="hljs-string">&#x27;timestamp&#x27;</span>], axis=<span class="hljs-number">1</span>)
+clean_ratings.info()
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-py">&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;pandas.core.frame.DataFrame&#x27;</span>&gt;
+RangeIndex: <span class="hljs-number">100836</span> entries, <span class="hljs-number">0</span> to <span class="hljs-number">100835</span>
+Data columns (total <span class="hljs-number">3</span> columns):
+<span class="hljs-comment">#   Column   Non-Null Count   Dtype  </span>
+---  ------   --------------   -----  
+<span class="hljs-number">0</span>   userId   <span class="hljs-number">100836</span> non-null  int64  
+<span class="hljs-number">1</span>   movieId  <span class="hljs-number">100836</span> non-null  int64  
+<span class="hljs-number">2</span>   rating   <span class="hljs-number">100836</span> non-null  float64
+dtypes: float64(<span class="hljs-number">1</span>), int64(<span class="hljs-number">2</span>)
+memory usage: <span class="hljs-number">2.3</span> MB
+</code></pre>
+</li>
+<li>
+<p>Menghapus nilai <strong>movieId</strong> yang tidak ada pada file <code>movies.csv</code></p>
+<p><strong>Kode:</strong></p>
+<pre><code class="language-py">clean_ratings = clean_ratings[clean_ratings[<span class="hljs-string">&#x27;movieId&#x27;</span>].isin(clean_movies[<span class="hljs-string">&#x27;movieId&#x27;</span>])]
+<span class="hljs-built_in">print</span>(<span class="hljs-string">f&quot;Jumlah data rating setelah menghapus film tidak relevan: <span class="hljs-subst">{<span class="hljs-built_in">len</span>(clean_ratings)}</span>\n&quot;</span>)
+clean_ratings.info()
+</code></pre>
+<p><strong>Output:</strong></p>
+<pre><code class="language-py">Jumlah data rating setelah menghapus film tidak relevan: <span class="hljs-number">100836</span>
+
+&lt;<span class="hljs-keyword">class</span> <span class="hljs-string">&#x27;pandas.core.frame.DataFrame&#x27;</span>&gt;
+RangeIndex: <span class="hljs-number">100836</span> entries, <span class="hljs-number">0</span> to <span class="hljs-number">100835</span>
+Data columns (total <span class="hljs-number">3</span> columns):
+<span class="hljs-comment">#   Column   Non-Null Count   Dtype  </span>
+---  ------   --------------   -----  
+<span class="hljs-number">0</span>   userId   <span class="hljs-number">100836</span> non-null  int64  
+<span class="hljs-number">1</span>   movieId  <span class="hljs-number">100836</span> non-null  int64  
+<span class="hljs-number">2</span>   rating   <span class="hljs-number">100836</span> non-null  float64
+dtypes: float64(<span class="hljs-number">1</span>), int64(<span class="hljs-number">2</span>)
+memory usage: <span class="hljs-number">2.3</span> MB
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="text-processing">Text Processing</h3>
+<p>Pada tahap ini dilakukan proses pembersihan teks pada kolom <code>genres</code>. Hal ini dilakukan untuk menghilangkan karakter lain selain huruf. Sehingga setiap nilai pada kolom <code>genres</code> memiliki format yang seragam sehingga memudahkan model dalam membaca data. Berikut penerapan dari tahap <em>text processing</em>.</p>
+<p><strong>Kode</strong></p>
+<pre><code class="language-py">clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>] = clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>].replace({<span class="hljs-string">&#x27;Sci-Fi&#x27;</span>:<span class="hljs-string">&#x27;Scifi&#x27;</span>, <span class="hljs-string">&#x27;Film-Noir&#x27;</span>:<span class="hljs-string">&#x27;Filmnoir&#x27;</span>})
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;Data untuk genre SciFi:&quot;</span>)
+<span class="hljs-built_in">print</span>(clean_movies[clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>] == <span class="hljs-string">&#x27;Scifi&#x27;</span>].head())
+
+<span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;\nData untuk genre Filmnoir:&quot;</span>)
+<span class="hljs-built_in">print</span>(clean_movies[clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>] == <span class="hljs-string">&#x27;Filmnoir&#x27;</span>].head())
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-py">Data untuk genre SciFi:
+      movieId                                  title genres
+<span class="hljs-number">668</span>       <span class="hljs-number">880</span>       Island of Dr. Moreau, The (<span class="hljs-number">1996</span>)  Scifi
+<span class="hljs-number">1320</span>     <span class="hljs-number">1779</span>                          Sphere (<span class="hljs-number">1998</span>)  Scifi
+<span class="hljs-number">1719</span>     <span class="hljs-number">2311</span>  <span class="hljs-number">2010</span>: The Year We Make Contact (<span class="hljs-number">1984</span>)  Scifi
+<span class="hljs-number">1902</span>     <span class="hljs-number">2526</span>                          Meteor (<span class="hljs-number">1979</span>)  Scifi
+<span class="hljs-number">2000</span>     <span class="hljs-number">2661</span>        It Came <span class="hljs-keyword">from</span> Outer Space (<span class="hljs-number">1953</span>)  Scifi
+
+Data untuk genre Filmnoir:
+      movieId                       title    genres
+<span class="hljs-number">279</span>       <span class="hljs-number">320</span>               Suture (<span class="hljs-number">1993</span>)  Filmnoir
+<span class="hljs-number">695</span>       <span class="hljs-number">913</span>  Maltese Falcon, The (<span class="hljs-number">1941</span>)  Filmnoir
+<span class="hljs-number">711</span>       <span class="hljs-number">930</span>            Notorious (<span class="hljs-number">1946</span>)  Filmnoir
+<span class="hljs-number">913</span>      <span class="hljs-number">1212</span>       Third Man, The (<span class="hljs-number">1949</span>)  Filmnoir
+<span class="hljs-number">1531</span>     <span class="hljs-number">2066</span>      Out of the Past (<span class="hljs-number">1947</span>)  Filmnoir
+</code></pre>
+<h3 id="data-transformation">Data Transformation</h3>
+<p>Tahap transformasi data merupakan tahap untuk mengubah bentuk atau format data mentah menjadi data yang siap untuk digunakan pemodelan. Proses transformasi data sangat penting dilakukan agar model yang dibangun memiliki performa yang baik. Berikut beberapa tahapan yang akan dilakukan dalam proses transformasi data:</p>
+<h4 id="tf-idf-vectorizer">TF-IDF Vectorizer</h4>
+<p>Dalam membangun sistem <em>Content-Based Filtering</em>, salah satu tahap penting adalah merepresentasikan data fitur dari item dalam bentuk vektor numerik yang dapat dihitung kemiripannya. Pada dataset <strong><code>movies.csv</code></strong>, kolom <code>genres</code> merupakan fitur penting yang mencerminkan konten dari masing-masing <strong><code>movies.csv</code></strong>. Untuk mengubah informasi tekstual pada kolom <code>genres</code> menjadi representasi numerik yang bermakna, digunakan teknik TF-IDF (<em>Term Frequency</em> - <em>Inverse Document Frequency</em>).</p>
+<p>Berikut rumus atau persamaan untuk mencari nilai dari TF-IDF</p>
+<p><strong>1. Term Frequency (TF)</strong></p>
+<p>Mengukur seberapa sering sebuah istilah <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> muncul dalam sebuah dokumen <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span>:</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>TF</mtext><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub><mrow><munder><mo>∑</mo><mi>k</mi></munder><msub><mi>f</mi><mrow><mi>k</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{TF}(t, d) = \frac{f_{t,d}}{\sum_{k} f_{k,d}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">TF</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.3571em;vertical-align:-0.9857em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3714em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1864em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.9857em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mrow><mi>t</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">f_{t,d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.9805em;vertical-align:-0.2861em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">t</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> = jumlah kemunculan term <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> dalam dokumen <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mo>∑</mo><mi>k</mi></msub><msub><mi>f</mi><mrow><mi>k</mi><mo separator="true">,</mo><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">\sum_{k} f_{k,d}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1864em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10764em;">f</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.1076em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.03148em;">k</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2861em;"><span></span></span></span></span></span></span></span></span></span> = total semua term dalam dokumen <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span></li>
+</ul>
+<p><strong>2. Inverse Document Frequency (IDF)</strong></p>
+<p>Mengukur seberapa penting sebuah istilah <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span> secara global dalam seluruh dokumen:</p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>IDF</mtext><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>log</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mfrac><mi>N</mi><msub><mi>n</mi><mi>t</mi></msub></mfrac><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">\text{IDF}(t) = \log \left( \frac{N}{n_t} \right)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">IDF</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span></span></span></span></span></p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span> = total jumlah dokumen</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>n</mi><mi>t</mi></msub></mrow><annotation encoding="application/x-tex">n_t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> = jumlah dokumen yang mengandung term <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi></mrow><annotation encoding="application/x-tex">t</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span></span></span></span></li>
+</ul>
+<blockquote>
+<p>Catatan: Untuk menghindari pembagian dengan nol, sering digunakan versi modifikasi seperti:</p>
+</blockquote>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>IDF</mtext><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi>log</mi><mo>⁡</mo><mrow><mo fence="true">(</mo><mfrac><mrow><mn>1</mn><mo>+</mo><mi>N</mi></mrow><mrow><mn>1</mn><mo>+</mo><msub><mi>n</mi><mi>t</mi></msub></mrow></mfrac><mo fence="true">)</mo></mrow><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">\text{IDF}(t) = \log \left( \frac{1 + N}{1 + n_t} \right) + 1
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">IDF</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.4em;vertical-align:-0.95em;"></span><span class="mop">lo<span style="margin-right:0.01389em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size3">(</span></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.2806em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">t</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.10903em;">N</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.836em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size3">)</span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span></p>
+<p><strong>3. TF-IDF</strong></p>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>TF-IDF</mtext><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo><mo>=</mo><mtext>TF</mtext><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>d</mi><mo stretchy="false">)</mo><mo>×</mo><mtext>IDF</mtext><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\text{TF-IDF}(t, d) = \text{TF}(t, d) \times \text{IDF}(t)
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">TF-IDF</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">TF</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">IDF</span></span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span></span></span></span></span></p>
+<p>Dengan rumus ini, TF-IDF memberikan nilai tinggi untuk istilah yang sering muncul dalam satu dokumen tetapi jarang muncul di seluruh dokumen, menjadikannya ideal untuk mengenali kata-kata yang unik dan penting dalam konteks tertentu.</p>
+<p>Berikut penerapan metode TF-IDF untuk mengubah nilai pada fitur <code>genres</code> menjadi vektor numerik.</p>
+<p><strong>Kode:</strong></p>
+<pre><code class="language-py">tfidf = TfidfVectorizer()
+genre_tfid_cbf = tfidf.fit_transform(clean_movies[<span class="hljs-string">&#x27;genres&#x27;</span>]) 
+genre_tfid_cbf.shape
+</code></pre>
+<p><strong>Output</strong></p>
+<pre><code class="language-py">(<span class="hljs-number">9708</span>, <span class="hljs-number">18</span>)
+</code></pre>
+<p>Proses tersebut menghasilkan vektor numerik dengan ukuran (9708, 18) yang artinya terdapat 9708 baris film dengan 18 dimensi sesuai jumlah data unik dari genre</p>
+<h4 id="cosine-similarity">Cosine Similarity</h4>
+<p><em>Cosine similarity</em> digunakan untuk mengukur kemiripan antar dua dokumen (atau <em>item</em>) berdasarkan nilai vektor TF-IDF mereka. Dalam sistem rekomendasi, <em>cosine similarity</em> akan mengukur seberapa mirip dua film (atau <em>item</em>) berdasarkan genre yang telah diubah menjadi vektor TF-IDF. Cara untuk mencari nilai <em>cosine similarity</em> dari setiap <em>item</em> adalah sebagai berikut.</p>
+<p>Misalkan:</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi></mrow><annotation encoding="application/x-tex">A</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span></span></span></span> = vektor TF-IDF dari dokumen pertama (film A)</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi></mrow><annotation encoding="application/x-tex">B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span></span></span></span> = vektor TF-IDF dari dokumen kedua (film B)</li>
+</ul>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>CosineSimilarity</mtext><mo stretchy="false">(</mo><mi>A</mi><mo separator="true">,</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mi>cos</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi>θ</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>A</mi><mo>⋅</mo><mi>B</mi></mrow><mrow><mi mathvariant="normal">∥</mi><mi>A</mi><mi mathvariant="normal">∥</mi><mo>×</mo><mi mathvariant="normal">∥</mi><mi>B</mi><mi mathvariant="normal">∥</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{CosineSimilarity}(A, B) = \cos(\theta) = \frac{A \cdot B}{\|A\| \times \|B\|}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">CosineSimilarity</span></span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">cos</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.02778em;">θ</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.2963em;vertical-align:-0.936em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.3603em;"><span style="top:-2.314em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord">∥</span><span class="mord mathnormal">A</span><span class="mord">∥</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mord">∥</span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.677em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.936em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo>⋅</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">A \cdot B</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal">A</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span></span></span></span> = hasil dot product antara vektor A dan B</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∥</mi><mi>A</mi><mi mathvariant="normal">∥</mi></mrow><annotation encoding="application/x-tex">\|A\|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord mathnormal">A</span><span class="mord">∥</span></span></span></span> = panjang (magnitudo) vektor A</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">∥</mi><mi>B</mi><mi mathvariant="normal">∥</mi></mrow><annotation encoding="application/x-tex">\|B\|</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">∥</span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mord">∥</span></span></span></span> = panjang (magnitudo) vektor B</li>
+</ul>
+<p class="katex-block"><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>CosineSimilarity</mtext><mo stretchy="false">(</mo><mi>A</mi><mo separator="true">,</mo><mi>B</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>A</mi><mi>i</mi></msub><mo>×</mo><msub><mi>B</mi><mi>i</mi></msub></mrow><mrow><msqrt><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mi>A</mi><mi>i</mi><mn>2</mn></msubsup></mrow></msqrt><mo>×</mo><msqrt><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><msubsup><mi>B</mi><mi>i</mi><mn>2</mn></msubsup></mrow></msqrt></mrow></mfrac></mrow><annotation encoding="application/x-tex">\text{CosineSimilarity}(A, B) = \frac{\sum_{i=1}^{n} A_i \times B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \times \sqrt{\sum_{i=1}^{n} B_i^2}}
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">CosineSimilarity</span></span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:2.624em;vertical-align:-1.13em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.494em;"><span style="top:-2.1727em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9373em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8043em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959em;"><span style="top:-2.4231em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.8973em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3027em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord sqrt"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9373em;"><span class="svg-align" style="top:-3.2em;"><span class="pstrut" style="height:3.2em;"></span><span class="mord" style="padding-left:1em;"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8043em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7959em;"><span style="top:-2.4231em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span><span style="top:-3.0448em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2769em;"><span></span></span></span></span></span></span></span></span><span style="top:-2.8973em;"><span class="pstrut" style="height:3.2em;"></span><span class="hide-tail" style="min-width:1.02em;height:1.28em;"><svg xmlns="http://www.w3.org/2000/svg" width="400em" height="1.28em" viewBox="0 0 400000 1296" preserveAspectRatio="xMinYMin slice"><path d="M263,681c0.7,0,18,39.7,52,119
+c34,79.3,68.167,158.7,102.5,238c34.3,79.3,51.8,119.3,52.5,120
+c340,-704.7,510.7,-1060.3,512,-1067
+l0 -0
+c4.7,-7.3,11,-11,19,-11
+H40000v40H1012.3
+s-271.3,567,-271.3,567c-38.7,80.7,-84,175,-136,283c-52,108,-89.167,185.3,-111.5,232
+c-22.3,46.7,-33.8,70.3,-34.5,71c-4.7,4.7,-12.3,7,-23,7s-12,-1,-12,-1
+s-109,-253,-109,-253c-72.7,-168,-109.3,-252,-110,-252c-10.7,8,-22,16.7,-34,26
+c-22,17.3,-33.3,26,-34,26s-26,-26,-26,-26s76,-59,76,-59s76,-60,76,-60z
+M1001 80h400000v40h-400000z"/></svg></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3027em;"><span></span></span></span></span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.6897em;"><span class="pstrut" style="height:3em;"></span><span class="mord"><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8043em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-3.2029em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal">A</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.05017em;">B</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0502em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.13em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></span></p>
+<p>Setelah menghasilkan matrix TF-IDF untuk semua film berdasarkan genre, cosine similarity dapat digunakan untuk:</p>
+<ul>
+<li>Menentukan film mana yang paling mirip dengan film yang sedang ditonton pengguna.</li>
+<li>Membuat rekomendasi film berdasarkan kemiripan konten.</li>
+</ul>
+<p>Berikut penerapan dari metode <em>cosine similarity</em>.</p>
+<p><strong>Kode:</strong></p>
+<pre><code class="language-py">genre_cosin_cbf = cosine_similarity(genre_tfid_cbf)
+genre_cosin_df = pd.DataFrame(genre_cosin_cbf, index=clean_movies[<span class="hljs-string">&#x27;title&#x27;</span>], columns=clean_movies[<span class="hljs-string">&#x27;title&#x27;</span>])
+genre_cosin_df.sample(<span class="hljs-number">5</span>, axis=<span class="hljs-number">1</span>, random_state=<span class="hljs-number">42</span>).sample(<span class="hljs-number">5</span>, axis=<span class="hljs-number">0</span>, random_state=<span class="hljs-number">42</span>)
+</code></pre>
+<p><strong>Output:</strong></p>
+<table>
+<thead>
+<tr>
+<th>title</th>
+<th>Wrong Turn (2003)</th>
+<th>Jewel of the Nile, The (1985)</th>
+<th>Major Dundee (1965)</th>
+<th>Vigilante Diaries (2016)</th>
+<th>We Own the Night (2007)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shattered (1991)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>Dirty Work (1998)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>Solaris (Solyaris) (1972)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+<tr>
+<td>Mississippi Burning (1988)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>1.0</td>
+</tr>
+<tr>
+<td>Late Marriage (Hatuna Meuheret) (2001)</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+<td>0.0</td>
+</tr>
+</tbody>
+</table>
+<p>Setiap baris mewakili satu film, dan setiap kolom juga mewakili film lain. Nilai di dalam tabel menunjukkan tingkat kemiripan antara dua film berdasarkan genre mereka, dihitung menggunakan cosine similarity. Jika data bernilai 0, berarti tidak ada kemiripan antar film, dan jika data bernilai 1, terdapat kemiripan antar film dilihat dari genre kedua film tersebut</p>
+<h4 id="data-encoding">Data Encoding</h4>
+<p>Pada tahap ini dilakukan proses encoding data dengan mengubah data <strong>userId</strong> dan <strong>movieId</strong> pada dataset <code>ratings.csv</code> agar memiliki nilai yang berurutan untuk memudahkan dalam proses pemodelan. Berikut sampel data setelah dilakukan proses encoding.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>userId</th>
+<th>movieId</th>
+<th>rating</th>
+<th>user</th>
+<th>movies</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>1</td>
+<td>1</td>
+<td>4.0</td>
+<td>0</td>
+<td>0</td>
+</tr>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>3</td>
+<td>4.0</td>
+<td>0</td>
+<td>1</td>
+</tr>
+<tr>
+<td>2</td>
+<td>1</td>
+<td>6</td>
+<td>4.0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>3</td>
+<td>1</td>
+<td>47</td>
+<td>5.0</td>
+<td>0</td>
+<td>3</td>
+</tr>
+<tr>
+<td>4</td>
+<td>1</td>
+<td>50</td>
+<td>5.0</td>
+<td>0</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<p>Berdasarkan tabel di atas, data yang dilakukan encoding adalah data <strong>userId</strong> dan <strong>movieId</strong>. Data <strong>userId</strong> diubah dan disimpan ke dalam kolom <strong>user</strong> lalu data <strong>movieId</strong> diubah dan disimpan ke dalam kolom <strong>movies</strong>. Kedua kolom hasil encoding tersebut nantinya akan digunakan sebagai fitur untuk melatih model sistem rekomendasi. Hal tersebut dilakukan untuk memudahkan mesin dalam membaca data sehingga model yang dibangun memiliki performa yang baik.</p>
+<h3 id="data-splitting">Data Splitting</h3>
+<p><em>Data splitting</em> adalah proses memisahkan dataset menjadi dua bagian utama, yaitu <strong>data latih (<em>training set</em>)</strong> dan <strong>data uji (<em>testing set</em>)</strong>. Tujuan dari proses ini adalah untuk mengevaluasi kinerja model secara objektif terhadap data yang belum pernah dilihat sebelumnya. Rasio yang umum digunakan dalam pemisahan data adalah <strong>80:20</strong>, artinya:</p>
+<ul>
+<li><strong>80%</strong> dari total data digunakan sebagai <strong>data latih</strong> untuk melatih model machine learning.</li>
+<li><strong>20%</strong> sisanya digunakan sebagai <strong>data uji</strong> untuk menguji performa model.</li>
+</ul>
+<p>Proses ini sangat penting agar model tidak hanya mengingat data pelatihan (<em>overfitting</em>), tetapi juga mampu melakukan generalisasi dengan baik terhadap data baru.</p>
+<h2 id="modeling">Modeling</h2>
+<p>Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.</p>
+<p><strong>Rubrik/Kriteria Tambahan (Opsional)</strong>:</p>
+<ul>
+<li>Menyajikan dua solusi rekomendasi dengan algoritma yang berbeda.</li>
+<li>Menjelaskan kelebihan dan kekurangan dari solusi/pendekatan yang dipilih.</li>
+</ul>
+<h2 id="evaluation">Evaluation</h2>
+<p>Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.</p>
+<p>Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.</p>
+<p><strong>Rubrik/Kriteria Tambahan (Opsional)</strong>:</p>
+<ul>
+<li>Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.</li>
+</ul>
+<p><strong>---Ini adalah bagian akhir laporan---</strong></p>
+<p><em>Catatan:</em></p>
+<ul>
+<li><em>Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor <a href="https://dillinger.io/">Dillinger</a>, <a href="https://guides.github.com/features/mastering-markdown/">Github Guides: Mastering markdown</a>, atau sumber lain di internet. Semangat!</em></li>
+<li>Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.</li>
+</ul>
+<h2 id="referensi">Referensi</h2>
+<p>[1] F. Ricci, L. Rokach, dan B. Shapira, <em>Recommender Systems Handbook</em>. Springer, 2011.</p>
+<p>[2] C. A. Gómez-Uribe dan N. Hunt, “The Netflix Recommender System: Algorithms, Business Value, and Innovation,” <em>ACM Trans. Manage. Inf. Syst.</em>, vol. 6, no. 4, pp. 1–19, Dec. 2015, doi: 10.1145/2843948.</p>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>

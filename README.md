@@ -42,7 +42,7 @@ Langkah ini diawali dengan proses pembersihan data (data cleaning) yang mencakup
 - Mengeliminasi kolom yang tidak relevan
 - Melakukan pemrosesan terhadap data teks
 
-Selanjutnya, dilakukan transformasi data seperti vektorisasi teks dengan metode TF-IDF dan perhitungan kesamaan antar item menggunakan cosine similarity. Tahap akhir adalah merancang fungsi rekomendasi serta melakukan pengujian prediksi.
+Selanjutnya, dilakukan transformasi data seperti vektorisasi teks dengan metode TF-IDF dan perhitungan kesamaan antar item menggunakan *cosine similarity*. Tahap akhir adalah merancang fungsi rekomendasi serta melakukan pengujian prediksi.
 
 **Pengembangan Sistem Rekomendasi dengan Collaborative Filtering:**
 Proses ini juga dimulai dari pembersihan dan persiapan data, yang meliputi:
@@ -524,28 +524,214 @@ Setiap baris mewakili satu film, dan setiap kolom juga mewakili film lain. Nilai
 
 #### Data Encoding
 
+Pada tahap ini dilakukan proses encoding data dengan mengubah data **userId** dan **movieId** pada dataset `ratings.csv` agar memiliki nilai yang berurutan untuk memudahkan dalam proses pemodelan. Berikut sampel data setelah dilakukan proses encoding.
+
+|   | userId | movieId | rating | user | movies |
+|---|--------|---------|--------|------|--------|
+| 0 |   1    |    1    |  4.0   |  0   |   0    |
+| 1 |   1    |    3    |  4.0   |  0   |   1    |
+| 2 |   1    |    6    |  4.0   |  0   |   2    |
+| 3 |   1    |   47    |  5.0   |  0   |   3    |
+| 4 |   1    |   50    |  5.0   |  0   |   4    |
+
+Berdasarkan tabel di atas, data yang dilakukan encoding adalah data **userId** dan **movieId**. Data **userId** diubah dan disimpan ke dalam kolom **user** lalu data **movieId** diubah dan disimpan ke dalam kolom **movies**. Kedua kolom hasil encoding tersebut nantinya akan digunakan sebagai fitur untuk melatih model sistem rekomendasi. Hal tersebut dilakukan untuk memudahkan mesin dalam membaca data sehingga model yang dibangun memiliki performa yang baik.
+
 ### Data Splitting
 
+*Data splitting* adalah proses memisahkan dataset menjadi dua bagian utama, yaitu **data latih (*training set*)** dan **data uji (*testing set*)**. Tujuan dari proses ini adalah untuk mengevaluasi kinerja model secara objektif terhadap data yang belum pernah dilihat sebelumnya. Rasio yang umum digunakan dalam pemisahan data adalah **80:20**, artinya:
+
+- **80%** dari total data digunakan sebagai **data latih** untuk melatih model machine learning.
+- **20%** sisanya digunakan sebagai **data uji** untuk menguji performa model.
+
+Proses ini sangat penting agar model tidak hanya mengingat data pelatihan (*overfitting*), tetapi juga mampu melakukan generalisasi dengan baik terhadap data baru.
+
 ## Modeling
-Tahapan ini membahas mengenai model sisten rekomendasi yang Anda buat untuk menyelesaikan permasalahan. Sajikan top-N recommendation sebagai output.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menyajikan dua solusi rekomendasi dengan algoritma yang berbeda.
-- Menjelaskan kelebihan dan kekurangan dari solusi/pendekatan yang dipilih.
+Pada proyek ini, sistem rekomendasi dibangun dengan dua pendekatan utama, yaitu *Content-Based Filtering* dan *Collaborative Filtering*, masing-masing menggunakan dataset yang berbeda untuk menghasilkan rekomendasi yang relevan bagi pengguna.
 
+### *Content-Based Filtering*
+
+#### Penjelasan *Content-Based Filtering*
+Pendekatan Content-Based Filtering difokuskan pada karakteristik atau fitur dari item yang direkomendasikan, dalam hal ini genre dari film. Dataset yang digunakan adalah `movies.csv`, yang berisi informasi mengenai judul film dan genre yang dimiliki.
+
+Langkah pertama dalam pendekatan ini adalah melakukan pra-pemrosesan data genre, di mana genre yang semula disimpan dalam bentuk string dipisahkan dan diubah menjadi format vektor menggunakan teknik *Text Vectorization* seperti TF-IDF (*Term Frequency-Inverse Document Frequency*). Representasi ini memungkinkan sistem untuk memahami keterkaitan antar film berdasarkan kemiripan genre.
+
+Selanjutnya, untuk menghasilkan rekomendasi, digunakan metode *cosine similarity* untuk mengukur tingkat kemiripan antar film berdasarkan vektor genre yang telah dibentuk. Ketika seorang pengguna menonton atau memberikan rating tinggi pada sebuah film, sistem akan mencari film lain yang memiliki kemiripan genre tertinggi dan menyarankannya kepada pengguna.
+
+#### Penerapan *Content-Based Filtering*
+
+Berikut penerapan untuk membuat sistem rekomendasi dengan pendekatan *Content-Based Filtering*.
+```py
+def movies_recommendations(nama_movies, similarity_data=genre_cosin_df, items=clean_movies[['title', 'genres']], k=5):
+    index = similarity_data.loc[:,nama_movies].to_numpy().argpartition(
+        range(-1, -k, -1))
+
+    closest = similarity_data.columns[index[-1:-(k+2):-1]]
+    closest = closest.drop(nama_movies, errors='ignore')
+
+    return pd.DataFrame(closest).merge(items).head(k)
+```
+Pada kode tersebut dibangun suatu sistem rekomendasi dengan mencari *item* yang memiliki nilai *cosine similarity* yang sama dengan inputan atau parameter `nama_movies` di dalam sebuah fungsi `movies_recommendation`. Selanjutnya sistem akan menghapus *item* yang memiliki nama yang sama dengan inputan, agar *output* dihasilkan oleh sistem hanya menampilkan item lain yang serupa saja.
+
+### *Collaborative Filtering*
+
+#### Penjelasan *Collaborative Filtering*
+Pendekatan Collaborative Filtering dalam proyek ini menggunakan data histori interaksi pengguna terhadap film yang terdapat dalam dataset `ratings.csv`. Dataset ini mencakup informasi tentang ID pengguna, ID film, dan rating yang diberikan oleh pengguna terhadap film tersebut.
+
+Alih-alih menggunakan teknik tradisional seperti *Matrix Factorization* atau *SVD*, sistem ini menerapkan pendekatan *deep learning* untuk mempelajari hubungan kompleks antara pengguna dan film berdasarkan histori rating mereka. Model yang digunakan merupakan arsitektur jaringan neural sederhana yang menerima ID pengguna dan ID film sebagai input, yang kemudian diubah menjadi representasi vektor melalui *embedding layer*.
+
+Layer embedding ini bertugas memetakan ID pengguna dan ID film ke dalam ruang laten berdimensi lebih rendah yang dapat menangkap fitur-fitur tersembunyi dari preferensi pengguna dan karakteristik film. Vektor-vektor ini kemudian digabungkan dan diteruskan ke beberapa layer dense (*fully connected*) untuk mempelajari interaksi non-linear di antara fitur tersebut.
+
+Model dilatih untuk memprediksi rating yang akan diberikan pengguna terhadap suatu film, menggunakan *binary crossentropy* sebagai *loss function*, dengan penyesuaian pada skala rating. Untuk evaluasi performa model, digunakan metrik *Root Mean Squared Error* (RMSE) untuk mengukur seberapa akurat prediksi dibandingkan dengan rating aktual.
+
+Pendekatan berbasis *deep learning* ini memungkinkan sistem untuk menangkap hubungan yang lebih kompleks antara pengguna dan item, serta memiliki kemampuan generalisasi yang lebih baik dalam kondisi data yang sparse.
+
+#### Penerapan *Collaborative Filtering*
+Berikut proses pembuatan sistem rekomendasi dengan pendekatan *Collaborative Filtering* menggunakan algoritma deep learning
+```py
+class RecommenderNet(tf.keras.Model):
+
+  def __init__(self, num_users, num_movies, embedding_size, **kwargs):
+    super(RecommenderNet, self).__init__(**kwargs)
+    self.num_users = num_users
+    self.num_movies = num_movies
+    self.embedding_size = embedding_size
+    self.user_embedding = layers.Embedding( 
+        num_users,
+        embedding_size,
+        embeddings_initializer = 'he_normal',
+        embeddings_regularizer = keras.regularizers.l2(1e-6)
+    )
+    self.user_bias = layers.Embedding(num_users, 1) 
+    self.movies_embedding = layers.Embedding(
+        num_movies,
+        embedding_size,
+        embeddings_initializer = 'he_normal',
+        embeddings_regularizer = keras.regularizers.l2(1e-6)
+    )
+    self.movies_bias = layers.Embedding(num_movies, 1) 
+
+  def call(self, inputs):
+    user_vector = self.user_embedding(inputs[:,0]) 
+    user_bias = self.user_bias(inputs[:, 0])
+    movies_vector = self.movies_embedding(inputs[:, 1]) 
+    movies_bias = self.movies_bias(inputs[:, 1]) 
+
+    dot_user_movies = tf.tensordot(user_vector, movies_vector, 2)
+
+    x = dot_user_movies + user_bias + movies_bias
+
+    return tf.nn.sigmoid(x)
+```
+
+Pembuatan sistem rekomendasi tersebut menggunakan model `RecommenderNet` yaitu model *deep learning* yang dirancang khusus untuk membangun sistem rekomendasi dengan pendekatan *collaborative filtering* dan juga merupakan *subclass* dari `tf.keras.Model` atau model kostum dari TensorFlow/Keras. Model ini dibangun menggunakan framework TensorFlow dan Keras, dengan pendekatan Embedding Layer untuk merepresentasikan pengguna dan film ke dalam ruang dimensi laten. Arsitektur ini memanfaatkan dot product untuk menghitung skor prediksi interaksi antara pengguna dan film, dengan fungsi aktivasi sigmoid untuk membatasi output antara 0 dan 1. Proses kerja secara singkat dari model ini adalah sebagai berikut.
+- Input: pasangan [user_id, movie_id]
+- Embedding: mengonversi user dan movie ID menjadi vektor
+- Dot product: menggabungkan vektor user dan movie untuk menghasilkan skor prediksi
+- Penyesuaian Bias: menambahkan bias pengguna dan film
+- Output: skor prediksi dalam rentang 0–1 sebagai estimasi rating atau probabilitas user menyukai film
+
+Selanjutnya dilakukan proses pelatihan (*training*) model dengan menggunakan arsitektur **RecommenderNet** yang telah didefinisikan sebelumnya:
+
+```python
+model = RecommenderNet(jumlah_users, jumlah_movies, 50)  # Inisialisasi model
+
+# Kompilasi model
+model.compile(
+    loss=tf.keras.losses.BinaryCrossentropy(),
+    optimizer=keras.optimizers.Adam(learning_rate=0.001),
+    metrics=[tf.keras.metrics.RootMeanSquaredError()]
+)
+
+# Memulai proses training
+history = model.fit(
+    x=x_train,
+    y=y_train,
+    batch_size=8,
+    epochs=30,
+    validation_data=(x_val, y_val)
+)
+```
+
+Model dilatih selama **30 epoch** dengan **batch size sebesar 8**, menggunakan *loss function* **Binary Crossentropy** dan *optimizer* **Adam** dengan *learning rate* 0.001. Sebagai metrik evaluasi, digunakan **Root Mean Squared Error (RMSE)** untuk mengukur seberapa jauh prediksi model dari nilai sebenarnya. Selama proses pelatihan, model belajar memetakan hubungan antara pengguna dan film berdasarkan histori rating yang tersedia.
 ## Evaluation
-Pada bagian ini Anda perlu menyebutkan metrik evaluasi yang digunakan. Kemudian, jelaskan hasil proyek berdasarkan metrik evaluasi tersebut.
 
-Ingatlah, metrik evaluasi yang digunakan harus sesuai dengan konteks data, problem statement, dan solusi yang diinginkan.
+Tahapan evaluasi bertujuan untuk mengukur kinerja model dalam memberikan rekomendasi kepada pengguna. Evaluasi dilakukan setelah model dibangun dan dilakukan pengujian untuk melihat performa dari model. Untuk mengukur kinerja dari sistem rekomendasi yang dikembangkan, digunakan dua metrik evaluasi yang berbeda, sesuai dengan pendekatan yang digunakan. Berikut metrik yang digunakan untuk melakukan evaluasi terhadap dua pendekatan yang digunakan untuk membangun sistem rekomendasi.
 
-**Rubrik/Kriteria Tambahan (Opsional)**: 
-- Menjelaskan formula metrik dan bagaimana metrik tersebut bekerja.
+### Metrik Precision (*Content-Based Filtering*)
 
-**---Ini adalah bagian akhir laporan---**
+Pada pendekatan Content-Based Filtering, sistem merekomendasikan sejumlah film yang memiliki kesamaan konten (dalam hal ini genre) dengan film yang disukai oleh pengguna. Untuk mengevaluasi kualitas rekomendasi ini, digunakan metrik **Precision\@K**.
 
-_Catatan:_
-- _Anda dapat menambahkan gambar, kode, atau tabel ke dalam laporan jika diperlukan. Temukan caranya pada contoh dokumen markdown di situs editor [Dillinger](https://dillinger.io/), [Github Guides: Mastering markdown](https://guides.github.com/features/mastering-markdown/), atau sumber lain di internet. Semangat!_
-- Jika terdapat penjelasan yang harus menyertakan code snippet, tuliskan dengan sewajarnya. Tidak perlu menuliskan keseluruhan kode project, cukup bagian yang ingin dijelaskan saja.
+**Precision\@K** mengukur **proporsi item yang relevan** (misalnya, yang benar-benar disukai atau ditonton oleh pengguna) dari **K item yang direkomendasikan**. Berikut persamaan atau rumus untuk menghitung nilai **Precision\@K**
+
+#### Rumus
+$$
+\text{Precision@K} = \frac{|\text{Relevant Items} \cap \text{Recommended Items}@K|}{K}
+$$
+
+* **Relevant Items**: Film yang benar-benar relevan (misalnya film yang diberi rating tinggi oleh pengguna).
+* **Recommended Items\@K**: Daftar top-K film yang direkomendasikan oleh sistem.
+
+Precision\@K bernilai antara 0 dan 1, di mana nilai yang lebih tinggi menunjukkan bahwa rekomendasi sistem lebih akurat dalam menyarankan item relevan.
+
+#### Hasil Evaluasi
+Berikut adalah hasil evaluasi dan perhitungan metrik **Precision\@K** menggunakan model *content-based filtering* yang telah dibangun.
+
+Pertama, pengguna memasukkan film `Toy Story (1995)` sebagai input. Berdasarkan data, film ini memiliki genre *Adventure*:
+
+```python
+clean_movies[clean_movies['title'] == 'Toy Story (1995)']
+```
+
+|   | movieId | title            | genres    |
+| - | ------- | ---------------- | --------- |
+| 0 | 1       | Toy Story (1995) | Adventure |
+
+Kemudian sistem menghasilkan 5 rekomendasi film yang memiliki genre serupa:
+
+```python
+movies_recommendations('Toy Story (1995)')
+```
+
+|   | title                    | genres    |
+| - | ------------------------ | --------- |
+| 0 | Touching the Void (2003) | Adventure |
+| 1 | Over the Hedge (2006)    | Adventure |
+| 2 | RV (2006)                | Adventure |
+| 3 | Shaggy Dog, The (2006)   | Adventure |
+| 4 | Pink Panther, The (2006) | Adventure |
+
+Dari hasil rekomendasi di atas, dapat dilihat bahwa semua film yang direkomendasikan memiliki genre yang sama, yaitu *Adventure*, yang sesuai dengan genre film input. Oleh karena itu, nilai **Precision\@K** dapat dihitung sebagai berikut:
+
+$$
+\text{Precision@5} = \frac{\text{Jumlah film relevan}}{\text{Jumlah film yang direkomendasikan}} = \frac{5}{5} = 1
+$$
+
+Dengan demikian, model content-based filtering yang digunakan menunjukkan performa yang sangat baik dalam memberikan rekomendasi yang relevan, dengan nilai **Precision\@5** sebesar **1.0**, yang berarti seluruh film yang direkomendasikan sesuai dengan karakteristik genre dari film yang dijadikan referensi.
+
+### Metrik RMSE (*Collaborative Filtering*)
+Untuk pendekatan Collaborative Filtering berbasis deep learning, sistem bertugas memprediksi **rating** yang akan diberikan pengguna terhadap film. Oleh karena itu, metrik evaluasi yang digunakan adalah *Root Mean Squared Error* (RMSE), yang mengukur seberapa dekat prediksi sistem terhadap rating aktual. Berikut persamaan atau rumus untuk mencari nilai RMSE
+
+#### Rumus
+
+$$
+\text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (\hat{r}_i - r_i)^2 }
+$$
+
+* $\hat{r}_i$: Rating yang diprediksi oleh model
+* $r_i$: Rating aktual dari pengguna
+* $n$: Jumlah total prediksi
+
+RMSE bernilai lebih kecil jika prediksi sistem semakin mendekati rating aktual. Nilai RMSE yang rendah menandakan bahwa sistem memiliki performa prediksi yang baik.
+
+#### Hasil Evaluasi
+
+Model *collaborative filtering* yang dikembangkan menggunakan pendekatan deep learning menghasilkan nilai evaluasi atau RMSE Sebagai berikut:
+
+- **RMSE Training**: 0.1457
+- **RMSE Test**: 0.2264
+
+Nilai RMSE yang relatif rendah pada data training dan test menunjukkan bahwa model mampu mempelajari pola preferensi pengguna terhadap film dengan cukup baik, serta memiliki **generalisasi yang cukup baik** pada data yang tidak pernah dilihat sebelumnya (test set).
 
 
 ## Referensi
