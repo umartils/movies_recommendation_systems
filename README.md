@@ -215,6 +215,9 @@ Pada tahap ini dilakukan proses pemeriksaan nilai kosong pada data dan juga meme
 
 Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fitur yang akan digunakan untuk pemodelan pada setiap dataset. 
 
+![genre](https://github.com/user-attachments/assets/598f317d-6918-44ee-a5a3-0d09e61e2675)
+
+![rating](https://github.com/user-attachments/assets/810afcc2-07e9-469a-b2ff-8c2d01a59442)
 
 
 ##### File: `movies.csv`
