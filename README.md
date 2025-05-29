@@ -827,9 +827,33 @@ Berdasarkan hasil pengujian di atas, dapat diketahui model sistem rekomendasi ya
 
 - Meskipun terdapat juga rekomendasi dari genre yang berbeda (**Children** dan **Adventure**), hal ini mencerminkan kemampuan model dalam melakukan eksplorasi terhadap item baru, yang dapat memperluas cakupan rekomendasi dan memberikan variasi kepada pengguna.
 
+## **Kesimpulan**
+
+Berdasarkan hasil eksperimen dan implementasi sistem rekomendasi film menggunakan dua pendekatan utama, yaitu *content-based filtering* dan *collaborative filtering*, dapat disimpulkan beberapa poin penting sebagai berikut:
+
+1. **Langkah-langkah dalam mengenali serta mengumpulkan informasi dari data**
+   Proses awal yang dilakukan adalah memahami struktur dan karakteristik data yang digunakan, yaitu data rating pengguna dan metadata film (judul dan genre). Data kemudian dibersihkan dan diproses, termasuk transformasi data genre menjadi format yang bisa dianalisis, serta encoding data pengguna dan film untuk keperluan pemodelan. Tahapan ini penting untuk memastikan kualitas data yang baik sebagai fondasi model sistem rekomendasi.
+
+2. **Proses perancangan model sistem rekomendasi dengan pendekatan *content-based filtering***
+   Model *content-based filtering* dirancang dengan memanfaatkan informasi konten dari film itu sendiri, khususnya fitur genre. Representasi film dilakukan menggunakan teknik *TF-IDF vectorization* terhadap fitur genre. Proses rekomendasi dilakukan dengan menghitung kemiripan antar film menggunakan *cosine similarity*. Sistem ini akan merekomendasikan film-film dengan konten yang mirip dengan film yang disukai oleh pengguna.
+
+3. **Metode yang digunakan untuk membangun model dengan pendekatan *collaborative filtering***
+   Model *collaborative filtering* dibangun menggunakan pendekatan pembelajaran mendalam (*deep learning*), dengan membangun model embedding untuk merepresentasikan pengguna dan film. Arsitektur yang digunakan adalah *RecommenderNet*, yang mempelajari interaksi antar pengguna dan item berdasarkan histori rating. Model dilatih menggunakan *Binary Crossentropy loss* dengan *optimizer* Adam dan dievaluasi dengan metrik RMSE untuk melihat kualitas prediksi rating.
+
+4. **Evaluasi performa model sistem rekomendasi**
+   Evaluasi untuk model *content-based filtering* dilakukan menggunakan metrik **Precision\@K**, yang mengukur proporsi rekomendasi yang relevan terhadap total rekomendasi yang diberikan. Hasil evaluasi menunjukkan nilai **Precision\@5** sebesar **1.0**, menandakan semua rekomendasi sesuai dengan genre dari film input.
+   Sedangkan pada model *collaborative filtering*, evaluasi dilakukan menggunakan **Root Mean Squared Error (RMSE)**, yang mengukur seberapa jauh nilai prediksi dari nilai rating sebenarnya. Hasil akhir menunjukkan nilai RMSE sebesar **0.1457** untuk data pelatihan dan **0.2264** untuk data validasi, yang menandakan performa model cukup baik dan tidak mengalami *overfitting*.
 
 ## Referensi
 
-\[1] F. Ricci, L. Rokach, dan B. Shapira, *Recommender Systems Handbook*. Springer, 2011.
+\[1] F. Ricci, L. Rokach & B. Shapira, *Recommender Systems Handbook*. Springer, 2011.
 
-\[2] C. A. Gómez-Uribe dan N. Hunt, “The Netflix Recommender System: Algorithms, Business Value, and Innovation,” *ACM Trans. Manage. Inf. Syst.*, vol. 6, no. 4, pp. 1–19, Dec. 2015, doi: 10.1145/2843948.
+\[2] C. A. Gómez-Uribe & N. Hunt, “The Netflix Recommender System: Algorithms, Business Value, and Innovation,” *ACM Trans. Manage. Inf. Syst.*, vol. 6, no. 4, pp. 1–19, Dec. 2015, doi: 10.1145/2843948.
+
+\[3] M. Fajriansyah, P. P. Adikara, & A. W. Widodo, "Sistem Rekomendasi Film Menggunakan *Content Based Learning*", *Jurnal Pengembangan Teknologi Informasi dan Ilmu Komputer*, vol. 5, no. 6, May. 2021, pp. 2188-2199.
+
+\[4] N. K. Ayyiyah, R. Kusumaningrum, & R. Rismiyati, "Film Recommender System menggunakan Metode Neural Network" *Jurnal Teknologi Informasi dan Ilmu Komputer (JTIIK)*, vol. 10, no. 3, Jun. 2023, pp. 699-708, doi: 10.25126/jtiik.2023106616.
+
+\[5] C. C. Nisha & A. Mohan, "A Social Recommender System using Deep Architecture and Network Embedding", *Applied Intelligence*, 2019, pp. 1937-1953, doi: 10.1007/s10489-018-1359-z.
+
+\[6] A. A. Amin, A. Sunyoto, & H. A. Fatta, "Mereduksi Error Prediksi Pada Sistem Rekomendasi Menggunakan Pendekatan Collaborative Filtering Berbasis Model Matrix Factorization", *EXPLORE*, vol. 11, no.2, 2021, pp. 8-13, doi: 10.35200/explore.v11i2.434.
