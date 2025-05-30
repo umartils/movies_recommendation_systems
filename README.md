@@ -549,6 +549,58 @@ Berdasarkan tabel di atas, data yang dilakukan encoding adalah data **userId** d
 
 Proses ini sangat penting agar model tidak hanya mengingat data pelatihan (*overfitting*), tetapi juga mampu melakukan generalisasi dengan baik terhadap data baru.
 
+#### Sampling Data
+
+Sebelum dilakukan pembagian data, dilakukan tahap sampling data untuk data pelatihan. Pada tahap ini data yang telah di*encode* diambil 10% dai total data dan data tersebut diacak dengan nilai `random_state=42`. Berikut penerapan pada proses sampling data.
+
+**Kode:**
+```py
+clean_ratings_random = clean_ratings_encode.sample(frac=0.1, random_state=42)
+clean_ratings_random
+```
+**Output:**
+| userId | movieId | rating | user | movies |
+|--------|---------|--------|------|--------|
+| 980    | 7       | 8665   | 3.5  | 6      | 783    |
+| 64486  | 414     | 42728  | 3.5  | 413    | 5917   |
+| 80543  | 509     | 6377   | 3.5  | 508    | 875    |
+| 50593  | 326     | 85342  | 4.5  | 325    | 5844   |
+| 64557  | 414     | 48304  | 4.0  | 413    | 1049   |
+| ...    | ...     | ...    | ...  | ...    | ...    |
+| 7665   | 51      | 3814   | 5.0  | 50     | 2930   |
+| 100551 | 610     | 93819  | 3.5  | 609    | 9613   |
+| 22510  | 153     | 8464   | 1.0  | 152    | 2046   |
+| 80475  | 509     | 3034   | 3.0  | 508    | 199    |
+| 61377  | 404     | 272    | 3.0  | 403    | 2069   |
+
+Data di atas merupakan data yang akan digunakan untuk pelatihan model sistem rekomendasi *collaborative filtering*. Diambil 10% dari total data dan urutan dari data asli diacak menghasilkan data random yang berbeda dari data aslinya.
+
+#### Scaling Target Value
+
+Selanjutnya dilakukan tahap scaling untuk nilai target atau dalam kasus ini adalah nilai rating yang akan menjadi target untuk proses pelatihan data. Proses ini dilakukan agar model yang dilatih dapat bekerja lebih baik karena input dan output data memiliki skala yang sama. Berikut penerapan *scaling target value*.
+
+**Kode:**
+```py
+X = clean_ratings_random[['user', 'movies']].values
+y = clean_ratings_random['rating'].apply(lambda x: (x - min_rating) / (max_rating - min_rating)).values
+```
+
+Sebelum dilakukan proses scaling nilai target, data dipisahkan dulu antara data fitur dan data target. Pada proyek ini yang menjadi data fitur atau inputan adalah data pada kolom `user` dan `movies`. Lalu yang menjadi target atau *output* adalah data pada kolom `rating`. Karena nilai pada data target memiliki skala (0.5 - 5.0) yang berbeda dengan nilai pada data input, maka dilakukan proses scaling agar nilai pada data target memiliki skala yang sama dengan data input.
+
+#### Splitting
+
+Pada tahap ini, data yang telah dilakukan sampling dan juga dilakukan scaling dibagi menjadi data latih dan data uji. Untuk perbandingan pembagian datanya adalah 80:20 dimana 80% dari data akan menjadi data latih dan 20% dari data akan menjadi data uji. Berikut penerapan dari proses pembagian data.
+```py
+train_indices = int(0.8 * clean_ratings_random.shape[0])
+x_train, x_val, y_train, y_val = (
+    X[:train_indices],
+    X[train_indices:],
+    y[:train_indices],
+    y[train_indices:]
+)
+```
+Kode diatas menjalan suatu proses pembagian data, dimana 80% data dari `clean_ratings_random` akan menjadi data latih dan sisanya menjadi data uji. Hasil dari pembagian data ini disimpan ke dalam variabel `x_train` untuk data latih yang berisi nilai *input*, `x_val` untuk data uji yang berisi nilai *input*, `y_train` untuk data latih yang berisi nilai target atau *output*, dan `y_val` untuk data uji yang berisi nilai target atau *output*.
+
 ## Modeling
 
 Pada proyek ini, sistem rekomendasi dibangun dengan dua pendekatan utama, yaitu *Content-Based Filtering* dan *Collaborative Filtering*, masing-masing menggunakan dataset yang berbeda untuk menghasilkan rekomendasi yang relevan bagi pengguna.
@@ -667,86 +719,7 @@ Kurva pada Gambar 3 menunjukkan perkembangan nilai RMSE untuk data pelatihan (*t
 - **RMSE pada data pelatihan** (garis biru) terus menurun secara konsisten seiring bertambahnya epoch, menunjukkan bahwa model semakin baik dalam mempelajari pola dari data pelatihan.
 - **RMSE pada data validasi** (garis oranye) mengalami penurunan pada awal pelatihan, kemudian cenderung stabil mulai sekitar epoch ke-10 hingga ke-30.
 
-Perbedaan kecil antara nilai RMSE pelatihan dan validasi menandakan bahwa model tidak mengalami ***overfitting***, dan mampu melakukan generalisasi dengan baik terhadap data yang belum pernah dilihat sebelumnya. Nilai akhir RMSE validasi yang berada di kisaran **0.2264** juga menunjukkan performa prediksi yang cukup baik untuk sistem rekomendasi berbasis ***collaborative filtering*** ini.
-
-## Evaluation
-
-Tahapan evaluasi bertujuan untuk mengukur kinerja model dalam memberikan rekomendasi kepada pengguna. Evaluasi dilakukan setelah model dibangun dan dilakukan pengujian untuk melihat performa dari model. Untuk mengukur kinerja dari sistem rekomendasi yang dikembangkan, digunakan dua metrik evaluasi yang berbeda, sesuai dengan pendekatan yang digunakan. Berikut metrik yang digunakan untuk melakukan evaluasi terhadap dua pendekatan yang digunakan untuk membangun sistem rekomendasi.
-
-### Metrik Precision (*Content-Based Filtering*)
-
-Pada pendekatan Content-Based Filtering, sistem merekomendasikan sejumlah film yang memiliki kesamaan konten (dalam hal ini genre) dengan film yang disukai oleh pengguna. Untuk mengevaluasi kualitas rekomendasi ini, digunakan metrik **Precision\@K**.
-
-**Precision\@K** mengukur **proporsi item yang relevan** (misalnya, yang benar-benar disukai atau ditonton oleh pengguna) dari **K item yang direkomendasikan**. Berikut persamaan atau rumus untuk menghitung nilai **Precision\@K**
-
-#### Rumus
-$$
-\text{Precision@K} = \frac{|\text{Relevant Items} \cap \text{Recommended Items}@K|}{K}
-$$
-
-* **Relevant Items**: Film yang benar-benar relevan (misalnya film yang diberi rating tinggi oleh pengguna).
-* **Recommended Items\@K**: Daftar top-K film yang direkomendasikan oleh sistem.
-
-Precision\@K bernilai antara 0 dan 1, di mana nilai yang lebih tinggi menunjukkan bahwa rekomendasi sistem lebih akurat dalam menyarankan item relevan.
-
-#### Hasil Evaluasi
-Berikut adalah hasil evaluasi dan perhitungan metrik **Precision\@K** menggunakan model *content-based filtering* yang telah dibangun.
-
-Pertama, pengguna memasukkan film `Toy Story (1995)` sebagai input. Berdasarkan data, film ini memiliki genre *Adventure*:
-
-```python
-clean_movies[clean_movies['title'] == 'Toy Story (1995)']
-```
-
-|   | movieId | title            | genres    |
-| - | ------- | ---------------- | --------- |
-| 0 | 1       | Toy Story (1995) | Adventure |
-
-Kemudian sistem menghasilkan 5 rekomendasi film yang memiliki genre serupa:
-
-```python
-movies_recommendations('Toy Story (1995)')
-```
-
-|   | title                    | genres    |
-| - | ------------------------ | --------- |
-| 0 | Touching the Void (2003) | Adventure |
-| 1 | Over the Hedge (2006)    | Adventure |
-| 2 | RV (2006)                | Adventure |
-| 3 | Shaggy Dog, The (2006)   | Adventure |
-| 4 | Pink Panther, The (2006) | Adventure |
-
-Dari hasil rekomendasi di atas, dapat dilihat bahwa semua film yang direkomendasikan memiliki genre yang sama, yaitu *Adventure*, yang sesuai dengan genre film input. Oleh karena itu, nilai **Precision\@K** dapat dihitung sebagai berikut:
-
-$$
-\text{Precision@5} = \frac{\text{Jumlah film relevan}}{\text{Jumlah film yang direkomendasikan}} = \frac{5}{5} = 1
-$$
-
-Dengan demikian, model content-based filtering yang digunakan menunjukkan performa yang sangat baik dalam memberikan rekomendasi yang relevan, dengan nilai **Precision\@5** sebesar **1.0**, yang berarti seluruh film yang direkomendasikan sesuai dengan karakteristik genre dari film yang dijadikan referensi.
-
-### Metrik RMSE (*Collaborative Filtering*)
-Untuk pendekatan Collaborative Filtering berbasis deep learning, sistem bertugas memprediksi **rating** yang akan diberikan pengguna terhadap film. Oleh karena itu, metrik evaluasi yang digunakan adalah *Root Mean Squared Error* (RMSE), yang mengukur seberapa dekat prediksi sistem terhadap rating aktual. Berikut persamaan atau rumus untuk mencari nilai RMSE
-
-#### Rumus
-
-$$
-\text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (\hat{r}_i - r_i)^2 }
-$$
-
-* $\hat{r}_i$: Rating yang diprediksi oleh model
-* $r_i$: Rating aktual dari pengguna
-* $n$: Jumlah total prediksi
-
-RMSE bernilai lebih kecil jika prediksi sistem semakin mendekati rating aktual. Nilai RMSE yang rendah menandakan bahwa sistem memiliki performa prediksi yang baik.
-
-#### Hasil Evaluasi
-
-Model *collaborative filtering* yang dikembangkan menggunakan pendekatan deep learning menghasilkan nilai evaluasi atau RMSE Sebagai berikut:
-
-- **RMSE Training**: 0.1457
-- **RMSE Test**: 0.2264
-
-Nilai RMSE yang relatif rendah pada data training dan test menunjukkan bahwa model mampu mempelajari pola preferensi pengguna terhadap film dengan cukup baik, serta memiliki **generalisasi yang cukup baik** pada data yang tidak pernah dilihat sebelumnya (test set).
+Perbedaan kecil antara nilai RMSE pelatihan dan validasi menandakan bahwa model tidak mengalami ***overfitting***, dan mampu melakukan generalisasi dengan baik terhadap data yang belum pernah dilihat sebelumnya. Nilai akhir RMSE validasi yang berada di kisaran **0.2266** juga menunjukkan performa prediksi yang cukup baik untuk sistem rekomendasi berbasis ***collaborative filtering*** ini.
 
 Selanjutnya dilakukan proses pengujian model untuk mengetahui seberapa baik model memberikan rekomendasi berdasarkan rating yang pernah diberikan oleh pengguna. Berikut proses pengujian model dengan pendekatan *collaborative filtering*.
 
@@ -831,10 +804,90 @@ Berdasarkan hasil pengujian di atas, dapat diketahui model sistem rekomendasi ya
 
 - Model berhasil merekomendasikan film dengan **genre yang sesuai** dengan preferensi pengguna sebelumnya, seperti:
 
-  * **First Wives Club, The (1996)**, **Weird Science (1985)** dan **Bachelor, The (1999)** — genre *Comedy*
-  * **'Til There Was You (1997)**, **Breakfast at Tiffany's (1961)**, dan **Trip to Bountiful, The (1985)** — genre *Drama*
+  - **First Wives Club, The (1996)**, **Weird Science (1985)** dan **Bachelor, The (1999)** — genre *Comedy*
+  - **'Til There Was You (1997)**, **Breakfast at Tiffany's (1961)**, dan **Trip to Bountiful, The (1985)** — genre *Drama*
 
 - Meskipun terdapat juga rekomendasi dari genre yang berbeda (**Children** dan **Adventure**), hal ini mencerminkan kemampuan model dalam melakukan eksplorasi terhadap item baru, yang dapat memperluas cakupan rekomendasi dan memberikan variasi kepada pengguna.
+
+## Evaluation
+
+Tahapan evaluasi bertujuan untuk mengukur kinerja model dalam memberikan rekomendasi kepada pengguna. Evaluasi dilakukan setelah model dibangun dan dilakukan pengujian untuk melihat performa dari model. Untuk mengukur kinerja dari sistem rekomendasi yang dikembangkan, digunakan dua metrik evaluasi yang berbeda, sesuai dengan pendekatan yang digunakan. Berikut metrik yang digunakan untuk melakukan evaluasi terhadap dua pendekatan yang digunakan untuk membangun sistem rekomendasi.
+
+### Metrik Precision (*Content-Based Filtering*)
+
+Pada pendekatan Content-Based Filtering, sistem merekomendasikan sejumlah film yang memiliki kesamaan konten (dalam hal ini genre) dengan film yang disukai oleh pengguna. Untuk mengevaluasi kualitas rekomendasi ini, digunakan metrik **Precision\@K**.
+
+**Precision\@K** mengukur **proporsi item yang relevan** (misalnya, yang benar-benar disukai atau ditonton oleh pengguna) dari **K item yang direkomendasikan**. Berikut persamaan atau rumus untuk menghitung nilai **Precision\@K**
+
+#### Rumus
+$$
+\text{Precision@K} = \frac{|\text{Relevant Items} \cap \text{Recommended Items}@K|}{K}
+$$
+
+* **Relevant Items**: Film yang benar-benar relevan (misalnya film yang diberi rating tinggi oleh pengguna).
+* **Recommended Items\@K**: Daftar top-K film yang direkomendasikan oleh sistem.
+
+Precision\@K bernilai antara 0 dan 1, di mana nilai yang lebih tinggi menunjukkan bahwa rekomendasi sistem lebih akurat dalam menyarankan item relevan.
+
+#### Hasil Evaluasi
+Berikut adalah hasil evaluasi dan perhitungan metrik **Precision\@K** menggunakan model *content-based filtering* yang telah dibangun.
+
+Pertama, pengguna memasukkan film `Toy Story (1995)` sebagai input. Berdasarkan data, film ini memiliki genre *Adventure*:
+
+```python
+clean_movies[clean_movies['title'] == 'Toy Story (1995)']
+```
+
+|   | movieId | title            | genres    |
+| - | ------- | ---------------- | --------- |
+| 0 | 1       | Toy Story (1995) | Adventure |
+
+Kemudian sistem menghasilkan 5 rekomendasi film yang memiliki genre serupa:
+
+```python
+movies_recommendations('Toy Story (1995)')
+```
+
+|   | title                    | genres    |
+| - | ------------------------ | --------- |
+| 0 | Touching the Void (2003) | Adventure |
+| 1 | Over the Hedge (2006)    | Adventure |
+| 2 | RV (2006)                | Adventure |
+| 3 | Shaggy Dog, The (2006)   | Adventure |
+| 4 | Pink Panther, The (2006) | Adventure |
+
+Dari hasil rekomendasi di atas, dapat dilihat bahwa semua film yang direkomendasikan memiliki genre yang sama, yaitu *Adventure*, yang sesuai dengan genre film input. Oleh karena itu, nilai **Precision\@K** dapat dihitung sebagai berikut:
+
+$$
+\text{Precision@5} = \frac{\text{Jumlah film relevan}}{\text{Jumlah film yang direkomendasikan}} = \frac{5}{5} = 1
+$$
+
+Dengan demikian, model content-based filtering yang digunakan menunjukkan performa yang sangat baik dalam memberikan rekomendasi yang relevan, dengan nilai **Precision\@5** sebesar **1.0**, yang berarti seluruh film yang direkomendasikan sesuai dengan karakteristik genre dari film yang dijadikan referensi.
+
+### Metrik RMSE (*Collaborative Filtering*)
+Untuk pendekatan Collaborative Filtering berbasis deep learning, sistem bertugas memprediksi **rating** yang akan diberikan pengguna terhadap film. Oleh karena itu, metrik evaluasi yang digunakan adalah *Root Mean Squared Error* (RMSE), yang mengukur seberapa dekat prediksi sistem terhadap rating aktual. Berikut persamaan atau rumus untuk mencari nilai RMSE
+
+#### Rumus
+
+$$
+\text{RMSE} = \sqrt{ \frac{1}{n} \sum_{i=1}^{n} (\hat{r}_i - r_i)^2 }
+$$
+
+* $\hat{r}_i$: Rating yang diprediksi oleh model
+* $r_i$: Rating aktual dari pengguna
+* $n$: Jumlah total prediksi
+
+RMSE bernilai lebih kecil jika prediksi sistem semakin mendekati rating aktual. Nilai RMSE yang rendah menandakan bahwa sistem memiliki performa prediksi yang baik.
+
+#### Hasil Evaluasi
+
+Model *collaborative filtering* yang dikembangkan menggunakan pendekatan deep learning menghasilkan nilai evaluasi atau RMSE Sebagai berikut:
+
+- **RMSE Training**: 0.1461
+- **RMSE Test**: 0.2266
+
+Nilai RMSE yang relatif rendah pada data training dan test menunjukkan bahwa model mampu mempelajari pola preferensi pengguna terhadap film dengan cukup baik, serta memiliki **generalisasi yang cukup baik** pada data yang tidak pernah dilihat sebelumnya (test set).
+
 
 ## **Kesimpulan**
 
@@ -851,7 +904,7 @@ Berdasarkan hasil eksperimen dan implementasi sistem rekomendasi film menggunaka
 
 4. **Evaluasi performa model sistem rekomendasi**
    Evaluasi untuk model *content-based filtering* dilakukan menggunakan metrik **Precision\@K**, yang mengukur proporsi rekomendasi yang relevan terhadap total rekomendasi yang diberikan. Hasil evaluasi menunjukkan nilai **Precision\@5** sebesar **1.0**, menandakan semua rekomendasi sesuai dengan genre dari film input.
-   Sedangkan pada model *collaborative filtering*, evaluasi dilakukan menggunakan **Root Mean Squared Error (RMSE)**, yang mengukur seberapa jauh nilai prediksi dari nilai rating sebenarnya. Hasil akhir menunjukkan nilai RMSE sebesar **0.1457** untuk data pelatihan dan **0.2264** untuk data validasi, yang menandakan performa model cukup baik dan tidak mengalami *overfitting*.
+   Sedangkan pada model *collaborative filtering*, evaluasi dilakukan menggunakan **Root Mean Squared Error (RMSE)**, yang mengukur seberapa jauh nilai prediksi dari nilai rating sebenarnya. Hasil akhir menunjukkan nilai RMSE sebesar **0.1461** untuk data pelatihan dan **0.2266** untuk data validasi, yang menandakan performa model cukup baik dan tidak mengalami *overfitting*.
 
 ## Referensi
 
