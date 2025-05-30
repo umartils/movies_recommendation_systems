@@ -33,9 +33,11 @@ Dalam merancang sistem rekomendasi film, pemahaman terhadap kebutuhan bisnis mer
 Untuk menjawab rumusan masalah dan mencapai target yang telah ditetapkan, diperlukan strategi penyelesaian yang sistematis dan terorganisir, yang meliputi langkah-langkah berikut:
 
 **Eksplorasi Data Awal:**
+
 Tahapan pertama dari proyek ini adalah memahami karakteristik dataset melalui proses exploratory data analysis (EDA). Aktivitas ini mencakup analisis terhadap jumlah baris dan kolom, jenis data, distribusi nilai, serta visualisasi grafik yang dapat membantu dalam mengenali pola umum maupun anomali dalam data.
 
 **Pengembangan Sistem Rekomendasi dengan Content-Based Filtering:**
+
 Langkah ini diawali dengan proses pembersihan data (data cleaning) yang mencakup:
 
 - Menghapus data duplikat dan *missing values* atau nilai kosong (NaN)
@@ -45,6 +47,7 @@ Langkah ini diawali dengan proses pembersihan data (data cleaning) yang mencakup
 Selanjutnya, dilakukan transformasi data seperti vektorisasi teks dengan metode TF-IDF dan perhitungan kesamaan antar item menggunakan *cosine similarity*. Tahap akhir adalah merancang fungsi rekomendasi serta melakukan pengujian prediksi.
 
 **Pengembangan Sistem Rekomendasi dengan Collaborative Filtering:**
+
 Proses ini juga dimulai dari pembersihan dan persiapan data, yang meliputi:
 
 - Menghapus data yang duplikat dan tidak valid
@@ -52,6 +55,7 @@ Proses ini juga dimulai dari pembersihan dan persiapan data, yang meliputi:
 - Membagi data menjadi set pelatihan dan pengujian (train-test split)
 
 **Evaluasi Kinerja Model:**
+
 Penilaian terhadap performa model dilakukan untuk memastikan efektivitas hasil yang diperoleh:
 
 - Pada model content-based filtering, digunakan metrik seperti Precision untuk menilai akurasi dari rekomendasi yang dihasilkan.
@@ -426,7 +430,7 @@ Dalam membangun sistem *Content-Based Filtering*, salah satu tahap penting adala
 
 Berikut rumus atau persamaan untuk mencari nilai dari TF-IDF
 
-**1. Term Frequency (TF)**
+**1. *Term Frequency* (TF)**
 
 Mengukur seberapa sering sebuah istilah $t$ muncul dalam sebuah dokumen $d$:
 
@@ -437,7 +441,7 @@ $$
 * $f_{t,d}$ = jumlah kemunculan term $t$ dalam dokumen $d$
 * $\sum_{k} f_{k,d}$ = total semua term dalam dokumen $d$
 
-**2. Inverse Document Frequency (IDF)**
+**2. *Inverse Document Frequency* (IDF)**
 
 Mengukur seberapa penting sebuah istilah $t$ secara global dalam seluruh dokumen:
 
@@ -476,7 +480,7 @@ genre_tfid_cbf.shape
 ```
 Proses tersebut menghasilkan vektor numerik dengan ukuran (9708, 18) yang artinya terdapat 9708 baris film dengan 18 dimensi sesuai jumlah data unik dari genre
 
-#### Cosine Similarity
+#### *Cosine Similarity*
 
 *Cosine similarity* digunakan untuk mengukur kemiripan antar dua dokumen (atau *item*) berdasarkan nilai vektor TF-IDF mereka. Dalam sistem rekomendasi, *cosine similarity* akan mengukur seberapa mirip dua film (atau *item*) berdasarkan genre yang telah diubah menjadi vektor TF-IDF. Cara untuk mencari nilai *cosine similarity* dari setiap *item* adalah sebagai berikut.
 
