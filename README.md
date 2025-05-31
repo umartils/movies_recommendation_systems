@@ -374,16 +374,16 @@ Pada tahap ini dilakukan proses pemilihan fitur untuk membangun model sistem rek
     ```
     **Output:**
     ```py
-    Jumlah data rating setelah menghapus film tidak relevan: 100836
+    Jumlah data rating setelah menghapus film tidak relevan: 100789
 
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 100836 entries, 0 to 100835
+    RangeIndex: 100789 entries, 0 to 100788
     Data columns (total 3 columns):
     #   Column   Non-Null Count   Dtype  
     ---  ------   --------------   -----  
-    0   userId   100836 non-null  int64  
-    1   movieId  100836 non-null  int64  
-    2   rating   100836 non-null  float64
+    0   userId   100789 non-null  int64  
+    1   movieId  100789 non-null  int64  
+    2   rating   100789 non-null  float64
     dtypes: float64(1), int64(2)
     memory usage: 2.3 MB
     ```
@@ -628,6 +628,32 @@ def movies_recommendations(nama_movies, similarity_data=genre_cosin_df, items=cl
     return pd.DataFrame(closest).merge(items).head(k)
 ```
 Pada kode tersebut dibangun suatu sistem rekomendasi dengan mencari *item* yang memiliki nilai *cosine similarity* yang sama dengan inputan atau parameter `nama_movies` di dalam sebuah fungsi `movies_recommendation`. Selanjutnya sistem akan menghapus *item* yang memiliki nama yang sama dengan inputan, agar *output* dihasilkan oleh sistem hanya menampilkan item lain yang serupa saja.
+
+Selanjutnya dilakukan pengujian model sistem rekomendasi sebagai berikut.
+
+Pertama, pengguna memasukkan film `Toy Story (1995)` sebagai input. Berdasarkan data, film ini memiliki genre *Adventure*:
+
+```python
+clean_movies[clean_movies['title'] == 'Toy Story (1995)']
+```
+
+|   | movieId | title            | genres    |
+| - | ------- | ---------------- | --------- |
+| 0 | 1       | Toy Story (1995) | Adventure |
+
+Kemudian sistem menghasilkan 5 rekomendasi film yang memiliki genre serupa:
+
+```python
+movies_recommendations('Toy Story (1995)')
+```
+
+|   | title                    | genres    |
+| - | ------------------------ | --------- |
+| 0 | Touching the Void (2003) | Adventure |
+| 1 | Over the Hedge (2006)    | Adventure |
+| 2 | RV (2006)                | Adventure |
+| 3 | Shaggy Dog, The (2006)   | Adventure |
+| 4 | Pink Panther, The (2006) | Adventure |
 
 ### *Collaborative Filtering*
 
