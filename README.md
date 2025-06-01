@@ -547,7 +547,7 @@ Berdasarkan tabel di atas, data yang dilakukan encoding adalah data **userId** d
 - **80%** dari total data digunakan sebagai **data latih** untuk melatih model machine learning.
 - **20%** sisanya digunakan sebagai **data uji** untuk menguji performa model.
 
-Proses ini sangat penting agar model tidak hanya mengingat data pelatihan (*overfitting*), tetapi juga mampu melakukan generalisasi dengan baik terhadap data baru.
+Proses ini sangat penting agar model tidak hanya mengingat data pelatihan (*overfitting*), tetapi juga mampu melakukan generalisasi dengan baik terhadap data baru. Sebelum melakukan splitting data terdapat beberapa tahapan diantaranya:
 
 #### Sampling Data
 
