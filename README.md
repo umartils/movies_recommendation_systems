@@ -559,8 +559,8 @@ clean_ratings_random = clean_ratings_encode.sample(frac=0.1, random_state=42)
 clean_ratings_random
 ```
 **Output:**
-| userId | movieId | rating | user | movies |
-|--------|---------|--------|------|--------|
+|        | userId | movieId | rating | user |movies  |
+|--------|---------|--------|------|--------|--------|
 | 980    | 7       | 8665   | 3.5  | 6      | 783    |
 | 64486  | 414     | 42728  | 3.5  | 413    | 5917   |
 | 80543  | 509     | 6377   | 3.5  | 508    | 875    |
