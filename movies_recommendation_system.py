@@ -132,7 +132,6 @@ def cekDistribusi(dataframe, kolom):
     # Menambahkan nilai aktual dan persentase di atas setiap bar
     for p in ax.patches:
         nilai = int(p.get_height())
-        # persentase = 100 * nilai / total
         ax.annotate(f'{nilai}',
                     (p.get_x() + p.get_width() / 2, p.get_height()),
                     ha='center', va='bottom', fontsize=8)
@@ -243,22 +242,22 @@ print('encoded userID : ', user_to_user_encoded)
 user_encoded_to_user = {i: x for i, x in enumerate(user_ids)}
 print('encoded angka ke userID: ', user_encoded_to_user)
 
-# Mengubah placeID menjadi list tanpa nilai yang sama
+# Mengubah moviesId menjadi list tanpa nilai yang sama
 movies_ids = clean_ratings_encode['movieId'].unique().tolist()
 print('list moviesID: ', movies_ids)
 
-# Melakukan proses encoding placeID
+# Melakukan proses encoding moviesId
 movies_to_movies_encoded = {x: i for i, x in enumerate(movies_ids)}
 print('encoded moviesID : ', movies_to_movies_encoded)
 
-# Melakukan proses encoding angka ke placeID
+# Melakukan proses encoding angka ke moviesId
 movies_encoded_to_movies = {i: x for i, x in enumerate(movies_ids)}
 print('encoded angka ke moviesID: ', movies_encoded_to_movies)
 
 # Mapping userID ke dataframe user
 clean_ratings_encode['user'] = clean_ratings_encode['userId'].map(user_to_user_encoded)
 
-# Mapping placeID ke dataframe resto
+# Mapping moviesId ke dataframe movies
 clean_ratings_encode['movies'] = clean_ratings_encode['movieId'].map(movies_to_movies_encoded)
 clean_ratings_encode.head()
 
@@ -266,7 +265,7 @@ clean_ratings_encode.head()
 jumlah_users = len(user_to_user_encoded)
 print(jumlah_users)
 
-# Mendapatkan jumlah resto
+# Mendapatkan jumlah movies
 jumlah_movies = len(movies_encoded_to_movies)
 print(jumlah_movies)
 
