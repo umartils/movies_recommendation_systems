@@ -143,13 +143,13 @@ Tabel ini berisi data mengenai film yang tersedia dalam sistem. Penjelasan tiap 
 
 ##### File: `ratings.csv`
 
-| userId | movieId   | rating | timestamp  |
-|--------|-----------|--------|------------|
-| 1      | 1         | 4.0    | 964981247  |
-| 1      | 110       | 4.0    | 964981247  |
-| 1      | 158       | 4.0    | 964982224  |
-| 1      | 260       | 4.5    | 964983815  |
-| 1      | 356       | 5.0    | 964982931  |
+| userId | movieId  | rating | timestamp  |
+|--------|----------|--------|------------|
+| 1      | 1        | 4.0    | 964982703  |
+| 1      | 3        | 4.0    | 964981247  |
+| 1      | 6        | 4.0    | 964982224  |
+| 1      | 47       | 5.0    | 964983815  |
+| 1      | 50       | 5.0    | 964982931  |
 
 Tabel ini menyimpan informasi mengenai rating (penilaian) yang diberikan oleh pengguna terhadap film. Penjelasan tiap kolom:
 
@@ -241,7 +241,7 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 
   -  **Kehadiran Nilai Tidak Valid:**
 
-        * Terlihat masih ada kategori `"(no genres listed)"` dengan **23 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
+        * Terlihat masih ada kategori `"(no genres listed)"` dengan **34 film** Sehingga perlu dilakukan proses pemilihan fitur agar menghapus genre yang tidak relevan dengan pembuatan model.
   
 - Distribusi data **rating** pada file `ratings.csv`
     <p align="center">
@@ -262,7 +262,7 @@ Pada tahap ini dilakukan visualisasi data untuk melihat distribusi nilai dari fi
 
      - **Rating rendah sangat jarang diberikan**
 
-        * Rating seperti **0.5, 1.0, dan 1.5** memiliki jumlah yang jauh lebih kecil (di bawah 2 ribu), menunjukkan bahwa:
+        * Rating seperti **0.5 dan 1.5** memiliki jumlah yang jauh lebih kecil (di bawah 2 ribu), menunjukkan bahwa:
 
           * Entah pengguna enggan memberikan rating rendah,
           * Atau film yang sangat buruk relatif jarang dalam dataset.
@@ -341,7 +341,7 @@ Pada tahap ini dilakukan proses pemilihan fitur untuk membangun model sistem rek
     ```
     Penjelasan:
 
-    Pada dataset `movies.csv` dilakukan proses pemilihan fitur dengan menghapus nilai ***no_genres_listed*** pada kolom `genres`. Hal ini dilakukan untuk menghilangkan data yang tidak memiliki informasi genre yang berguna, sehingga analisis atau model yang dibangun nantinya tidak terpengaruh oleh entri yang tidak mengandung kategori genre yang valid. Dengan membersihkan data dari nilai seperti ***(no genres listed)***, kita memastikan bahwa setiap entri dalam kolom `genres` merepresentasikan minimal satu kategori genre yang dapat digunakan untuk keperluan klasifikasi, analisis statistik, atau visualisasi data.
+    Pada dataset `movies.csv` dilakukan proses pemilihan fitur dengan menghapus nilai ***no genres listed*** pada kolom `genres`. Hal ini dilakukan untuk menghilangkan data yang tidak memiliki informasi genre yang berguna, sehingga analisis atau model yang dibangun nantinya tidak terpengaruh oleh entri yang tidak mengandung kategori genre yang valid. Dengan membersihkan data dari nilai seperti ***(no genres listed)***, kita memastikan bahwa setiap entri dalam kolom `genres` merepresentasikan minimal satu kategori genre yang dapat digunakan untuk keperluan klasifikasi, analisis statistik, atau visualisasi data.
 
 - Pemilihan fitur pada dataset `ratings.csv`
   
@@ -377,7 +377,7 @@ Pada tahap ini dilakukan proses pemilihan fitur untuk membangun model sistem rek
     Jumlah data rating setelah menghapus film tidak relevan: 100789
 
     <class 'pandas.core.frame.DataFrame'>
-    RangeIndex: 100789 entries, 0 to 100788
+    RangeIndex: 100789 entries, 0 to 100835
     Data columns (total 3 columns):
     #   Column   Non-Null Count   Dtype  
     ---  ------   --------------   -----  
