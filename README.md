@@ -480,52 +480,6 @@ genre_tfid_cbf.shape
 ```
 Proses tersebut menghasilkan vektor numerik dengan ukuran (9708, 18) yang artinya terdapat 9708 baris film dengan 18 dimensi sesuai jumlah data unik dari genre
 
-#### *Cosine Similarity*
-
-*Cosine similarity* digunakan untuk mengukur kemiripan antar dua dokumen (atau *item*) berdasarkan nilai vektor TF-IDF mereka. Dalam sistem rekomendasi, *cosine similarity* akan mengukur seberapa mirip dua film (atau *item*) berdasarkan genre yang telah diubah menjadi vektor TF-IDF. Cara untuk mencari nilai *cosine similarity* dari setiap *item* adalah sebagai berikut.
-
-Misalkan:
-
-* $A$ = vektor TF-IDF dari dokumen pertama (film A)
-* $B$ = vektor TF-IDF dari dokumen kedua (film B)
-
-$$
-\text{CosineSimilarity}(A, B) = \cos(\theta) = \frac{A \cdot B}{\|A\| \times \|B\|}
-$$
-
-* $A \cdot B$ = hasil dot product antara vektor A dan B
-* $\|A\|$ = panjang (magnitudo) vektor A
-* $\|B\|$ = panjang (magnitudo) vektor B
-
-$$
-\text{CosineSimilarity}(A, B) = \frac{\sum_{i=1}^{n} A_i \times B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \times \sqrt{\sum_{i=1}^{n} B_i^2}}
-$$
-
-Setelah menghasilkan matrix TF-IDF untuk semua film berdasarkan genre, cosine similarity dapat digunakan untuk:
-
-- Menentukan film mana yang paling mirip dengan film yang sedang ditonton pengguna.
-- Membuat rekomendasi film berdasarkan kemiripan konten.
-
-Berikut penerapan dari metode *cosine similarity*.
-
-**Kode:**
-```py
-genre_cosin_cbf = cosine_similarity(genre_tfid_cbf)
-genre_cosin_df = pd.DataFrame(genre_cosin_cbf, index=clean_movies['title'], columns=clean_movies['title'])
-genre_cosin_df.sample(5, axis=1, random_state=42).sample(5, axis=0, random_state=42)
-```
-
-**Output:**
-| title                              | Wrong Turn (2003) | Jewel of the Nile, The (1985) | Major Dundee (1965) | Vigilante Diaries (2016) | We Own the Night (2007) |
-|------------------------------------|--------------------|-------------------------------|----------------------|---------------------------|--------------------------|
-| Shattered (1991)                  | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
-| Dirty Work (1998)                 | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
-| Solaris (Solyaris) (1972)         | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
-| Mississippi Burning (1988)       | 0.0                | 0.0                           | 0.0                  | 0.0                       | 1.0                      |
-| Late Marriage (Hatuna Meuheret) (2001) | 0.0           | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
-
-Setiap baris mewakili satu film, dan setiap kolom juga mewakili film lain. Nilai di dalam tabel menunjukkan tingkat kemiripan antara dua film berdasarkan genre mereka, dihitung menggunakan cosine similarity. Jika data bernilai 0, berarti tidak ada kemiripan antar film, dan jika data bernilai 1, terdapat kemiripan antar film dilihat dari genre kedua film tersebut
-
 #### Data Encoding
 
 Pada tahap ini dilakukan proses encoding data dengan mengubah data **userId** dan **movieId** pada dataset `ratings.csv` agar memiliki nilai yang berurutan untuk memudahkan dalam proses pemodelan. Berikut sampel data setelah dilakukan proses encoding.
@@ -613,6 +567,52 @@ Pendekatan Content-Based Filtering difokuskan pada karakteristik atau fitur dari
 Langkah pertama dalam pendekatan ini adalah melakukan pra-pemrosesan data genre, di mana genre yang semula disimpan dalam bentuk string dipisahkan dan diubah menjadi format vektor menggunakan teknik *Text Vectorization* seperti TF-IDF (*Term Frequency-Inverse Document Frequency*). Representasi ini memungkinkan sistem untuk memahami keterkaitan antar film berdasarkan kemiripan genre.
 
 Selanjutnya, untuk menghasilkan rekomendasi, digunakan metode *cosine similarity* untuk mengukur tingkat kemiripan antar film berdasarkan vektor genre yang telah dibentuk. Ketika seorang pengguna menonton atau memberikan rating tinggi pada sebuah film, sistem akan mencari film lain yang memiliki kemiripan genre tertinggi dan menyarankannya kepada pengguna.
+
+#### *Cosine Similarity*
+
+*Cosine similarity* digunakan untuk mengukur kemiripan antar dua dokumen (atau *item*) berdasarkan nilai vektor TF-IDF mereka. Dalam sistem rekomendasi, *cosine similarity* akan mengukur seberapa mirip dua film (atau *item*) berdasarkan genre yang telah diubah menjadi vektor TF-IDF. Cara untuk mencari nilai *cosine similarity* dari setiap *item* adalah sebagai berikut.
+
+Misalkan:
+
+* $A$ = vektor TF-IDF dari dokumen pertama (film A)
+* $B$ = vektor TF-IDF dari dokumen kedua (film B)
+
+$$
+\text{CosineSimilarity}(A, B) = \cos(\theta) = \frac{A \cdot B}{\|A\| \times \|B\|}
+$$
+
+* $A \cdot B$ = hasil dot product antara vektor A dan B
+* $\|A\|$ = panjang (magnitudo) vektor A
+* $\|B\|$ = panjang (magnitudo) vektor B
+
+$$
+\text{CosineSimilarity}(A, B) = \frac{\sum_{i=1}^{n} A_i \times B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \times \sqrt{\sum_{i=1}^{n} B_i^2}}
+$$
+
+Setelah menghasilkan matrix TF-IDF untuk semua film berdasarkan genre, cosine similarity dapat digunakan untuk:
+
+- Menentukan film mana yang paling mirip dengan film yang sedang ditonton pengguna.
+- Membuat rekomendasi film berdasarkan kemiripan konten.
+
+Berikut penerapan dari metode *cosine similarity*.
+
+**Kode:**
+```py
+genre_cosin_cbf = cosine_similarity(genre_tfid_cbf)
+genre_cosin_df = pd.DataFrame(genre_cosin_cbf, index=clean_movies['title'], columns=clean_movies['title'])
+genre_cosin_df.sample(5, axis=1, random_state=42).sample(5, axis=0, random_state=42)
+```
+
+**Output:**
+| title                              | Wrong Turn (2003) | Jewel of the Nile, The (1985) | Major Dundee (1965) | Vigilante Diaries (2016) | We Own the Night (2007) |
+|------------------------------------|--------------------|-------------------------------|----------------------|---------------------------|--------------------------|
+| Shattered (1991)                  | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+| Dirty Work (1998)                 | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+| Solaris (Solyaris) (1972)         | 0.0                | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+| Mississippi Burning (1988)       | 0.0                | 0.0                           | 0.0                  | 0.0                       | 1.0                      |
+| Late Marriage (Hatuna Meuheret) (2001) | 0.0           | 0.0                           | 0.0                  | 0.0                       | 0.0                      |
+
+Setiap baris mewakili satu film, dan setiap kolom juga mewakili film lain. Nilai di dalam tabel menunjukkan tingkat kemiripan antara dua film berdasarkan genre mereka, dihitung menggunakan cosine similarity. Jika data bernilai 0, berarti tidak ada kemiripan antar film, dan jika data bernilai 1, terdapat kemiripan antar film dilihat dari genre kedua film tersebut
 
 #### Penerapan *Content-Based Filtering*
 
